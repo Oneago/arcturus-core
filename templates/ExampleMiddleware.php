@@ -4,7 +4,7 @@
 namespace App\Middlewares;
 
 
-use App\Bases\MiddlewareInterface;
+use Oneago\AdaConsole\Bases\MiddlewareInterface;
 
 /**
  * Class ExampleMiddleware

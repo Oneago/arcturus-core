@@ -3,8 +3,9 @@
 
 namespace App\Controllers;
 
-use App\Bases\MiddlewareInterface;
+
 use App\Bases\TwigController;
+use Oneago\AdaConsole\Bases\MiddlewareInterface;
 
 /**
  * Class ExampleController is a example class, you can delete or use as a model example for your app
