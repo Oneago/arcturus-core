@@ -1,0 +1,34 @@
+{
+    "name": "oneago/ada-console",
+    "description": "Console for oneago/oneago-php-template",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "symfony/console": "^5.1",
+        "twig/twig": "^3.1"
+    },
+    "authors": [
+        {
+            "name": "jruedaq",
+            "email": "jrueda@oneago.com",
+            "homepage": "https://www.juandavid.dev",
+            "role": "Developer"
+        },
+        {
+            "name": "Oneago",
+            "email": "support@oneago.com",
+            "homepage": "https://www.oneago.com/",
+            "role": "Maintainer"
+        }
+    ],
+    "bin": [
+        "bin/ada"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Oneago\\AdaConsole\\Commands\\": "src/",
+            "Oneago\\AdaConsole\\Bases\\": "bases/"
+        }
+    }
+}
