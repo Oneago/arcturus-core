@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateModel extends Command
 {
     protected static $defaultName = "make:model";
-    private string $modelName;
 
     protected function configure()
     {
@@ -27,34 +26,32 @@ class CreateModel extends Command
         $output->writeln("<info>Wait a moment please...</info>");
         $output->writeln("");
 
-        $this->modelName = ucfirst($input->getArgument('model name')) . "Model.php";
-        $output->writeln("<info>Creating {$this->modelName}</info>");
-        $this->createFile($this->modelName, "https://raw.githubusercontent.com/Oneago/oneago-php-template/master/models/ExampleModel.php", "models");
-        $output->writeln("<info>{$this->modelName} Created!</info>");
+        $modelName = ucfirst($input->getArgument('model name')) . "Model.php";
+        $output->writeln("<info>Creating {$modelName}</info>");
+        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php", "models");
+        $output->writeln("<info>{$modelName} Created!</info>");
         $output->writeln("");
 
         $output->writeln("<info>{$input->getArgument('model name')} model has created!</info>");
         return Command::SUCCESS;
     }
 
-    private function createFile(string $name, string $url, string $path)
+    private function createFile(string $name, string $templatePath, string $savePath)
     {
-        $fp = fopen("$path/$name", "w+");
+        $fp = fopen("$savePath/$name", "w+");
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $data = curl_exec($ch);
-        curl_close($ch);
+        $fileContent = file_get_contents($templatePath);
 
         $contents = str_replace(
             [
                 "ExampleModel",
             ],
             [
-                str_replace(".php", "", $this->modelName),
-            ], $data);
+                str_replace(".php", "", $name),
+            ], $fileContent
+        );
         fwrite($fp, $contents);
         fclose($fp);
-        exec("git add $path/$name");
+        exec("git add $savePath/$name");
     }
 }

@@ -11,7 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateMiddleware extends Command
 {
     protected static $defaultName = "make:middleware";
-    private string $middlewareName;
 
     protected function configure()
     {
@@ -27,10 +26,10 @@ class CreateMiddleware extends Command
         $output->writeln("<info>Wait a moment please...</info>");
         $output->writeln("");
 
-        $this->middlewareName = ucfirst($input->getArgument('middleware name')) . "Middleware.php";
-        $output->writeln("<info>Creating {$this->middlewareName}</info>");
-        $this->createFile($this->middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php", "middlewares");
-        $output->writeln("<info>{$this->middlewareName} Created!</info>");
+        $middlewareName = ucfirst($input->getArgument('middleware name')) . "Middleware.php";
+        $output->writeln("<info>Creating {$middlewareName}</info>");
+        $this->createFile($middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php", "middlewares");
+        $output->writeln("<info>{$middlewareName} Created!</info>");
         $output->writeln("");
 
         $output->writeln("<info>{$input->getArgument('middleware name')} middleware has created!</info>");
@@ -48,8 +47,9 @@ class CreateMiddleware extends Command
                 "ExampleMiddleware",
             ],
             [
-                str_replace(".php", "", $this->middlewareName),
-            ], $fileContent);
+                str_replace(".php", "", $name),
+            ], $fileContent
+        );
         fwrite($fp, $contents);
         fclose($fp);
         exec("git add $savePath/$name");

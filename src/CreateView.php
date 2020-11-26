@@ -11,8 +11,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateView extends Command
 {
     protected static $defaultName = "make:view";
-    private string $viewName;
-    private string $controllerName;
 
     protected function configure()
     {
@@ -28,30 +26,27 @@ class CreateView extends Command
         $output->writeln("<info>Wait a moment please...</info>");
         $output->writeln("");
 
-        $this->viewName = $input->getArgument('view name') . ".twig";
-        $output->writeln("<info>Creating {$this->viewName}</info>");
-        $this->createFile($this->viewName, "https://raw.githubusercontent.com/Oneago/oneago-php-template/master/views/example.twig", "views");
-        $output->writeln("<info>{$this->viewName} Created!</info>");
+        $viewName = $input->getArgument('view name') . ".twig";
+        $output->writeln("<info>Creating {$viewName}</info>");
+        $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "views");
+        $output->writeln("<info>{$viewName} Created!</info>");
         $output->writeln("");
 
-        $this->controllerName = ucfirst($input->getArgument('view name')) . "Controller.php";
-        $output->writeln("<info>Creating {$this->controllerName}</info>");
-        $this->createFile($this->controllerName, "https://raw.githubusercontent.com/Oneago/oneago-php-template/master/controllers/ExampleController.php", "controllers");
-        $output->writeln("<info>{$this->controllerName} Created!</info>");
+        $controllerName = ucfirst($input->getArgument('view name')) . "Controller.php";
+        $output->writeln("<info>Creating {$controllerName}</info>");
+        $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "controllers");
+        $output->writeln("<info>{$controllerName} Created!</info>");
         $output->writeln("");
 
         $output->writeln("<info>{$input->getArgument('view name')} view has created!</info>");
         return Command::SUCCESS;
     }
 
-    private function createFile(string $name, string $url, string $path)
+    private function createFile(string $name, string $templatePath, string $savePath)
     {
-        $fp = fopen("$path/$name", "w+");
+        $fp = fopen("$savePath/$name", "w+");
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $data = curl_exec($ch);
-        curl_close($ch);
+        $fileContent = file_get_contents($templatePath);
 
         $contents = str_replace(
             [
@@ -60,12 +55,13 @@ class CreateView extends Command
                 " is a example class, you can delete or use as a model example for your app"
             ],
             [
-                $this->viewName,
-                str_replace(".php", "", $this->controllerName),
+                $name,
+                str_replace(".php", "", $name),
                 ""
-            ], $data);
+            ], $fileContent
+        );
         fwrite($fp, $contents);
         fclose($fp);
-        exec("git add $path/$name");
+        exec("git add $savePath/$name");
     }
 }
