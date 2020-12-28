@@ -15,7 +15,7 @@ use Twig\TwigFunction;
 /**
  * Class BaseTwigController is a basic twig loader
  */
-abstract class BaseTwigController implements ViewInterface
+abstract class BaseTwigController
 {
     protected Environment $templateEngine;
     protected string $templatesPath = "../views";
@@ -96,4 +96,6 @@ abstract class BaseTwigController implements ViewInterface
         }
         return true;
     }
+
+    public abstract function render();
 }
