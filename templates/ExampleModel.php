@@ -17,7 +17,7 @@ class ExampleModel extends Connection
         // TODO: Implement create() method.
     }
 
-    public function list(string $search = null): array
+    public function list(string $search = null): ?array
     {
         // TODO: Implement list() method.
     }
