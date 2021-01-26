@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CreateView extends Command
 {
     protected static $defaultName = "make:view";
+    private string $viewName;
 
     protected function configure()
     {
@@ -26,7 +27,7 @@ class CreateView extends Command
         $output->writeln("<info>Wait a moment please...</info>");
         $output->writeln("");
 
-        $viewName = $input->getArgument('view name') . ".twig";
+        $viewName = $this->viewName = $input->getArgument('view name') . ".twig";
         $output->writeln("<info>Creating {$viewName}</info>");
         $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "views");
         $output->writeln("<info>{$viewName} Created!</info>");
@@ -55,7 +56,7 @@ class CreateView extends Command
                 " is a example class, you can delete or use as a model example for your app"
             ],
             [
-                $name,
+                $this->viewName,
                 str_replace(".php", "", $name),
                 ""
             ], $fileContent
