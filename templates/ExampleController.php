@@ -21,7 +21,7 @@ class ExampleController extends TwigController
      */
     public function __construct(string $body, MiddlewareInterface...$middlewares)
     {
-        parent::__construct($middlewares);
+        parent::__construct(...$middlewares);
         $this->body = $body;
         $this->render();
     }

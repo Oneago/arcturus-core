@@ -19,13 +19,16 @@ abstract class BaseTwigController
 {
     protected Environment $templateEngine;
     protected string $templatesPath = "../views";
+    /**
+     * @var MiddlewareInterface[]
+     */
     protected array $middlewares;
 
     /**
      * BaseTwigController constructor.
-     * @param MiddlewareInterface[] $middlewares
+     * @param MiddlewareInterface ...$middlewares
      */
-    public function __construct(array $middlewares)
+    public function __construct(MiddlewareInterface ...$middlewares)
     {
         $this->middlewares = $middlewares;
 
