@@ -3,6 +3,7 @@
 
 namespace Oneago\AdaConsole\Bases;
 
+use Twig\Cache\CacheInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -35,7 +36,6 @@ abstract class BaseTwigController
         $loader = new FilesystemLoader($this->templatesPath);
         $this->templateEngine = new Environment($loader, [
             "debug" => $_ENV["DEBUG_MODE"],
-            "cache" => !$_ENV["DEBUG_MODE"]
         ]);
 
         if ($_ENV['DEBUG_MODE'])
