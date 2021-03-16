@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use ZipArchive;
 
-class GenerateProductionProject extends Command
+class RunRelease extends Command
 {
     protected static $defaultName = "run:release";
 

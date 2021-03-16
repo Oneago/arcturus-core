@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SassMaker extends Command
 {
-    protected static $defaultName = "make:sass:new";
+    protected static $defaultName = "sass:new";
 
     protected function configure()
     {

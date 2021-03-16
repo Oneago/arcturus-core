@@ -7,7 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RunDocker extends Command
+class DockerRun extends Command
 {
     protected static $defaultName = "docker:run";
 

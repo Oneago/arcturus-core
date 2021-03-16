@@ -1,16 +1,18 @@
 #!/usr/bin/env php
 <?php
-require __DIR__ . '/../../../../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Oneago\AdaConsole\Commands\CreateMiddleware;
 use Oneago\AdaConsole\Commands\CreateModel;
 use Oneago\AdaConsole\Commands\CreateView;
-use Oneago\AdaConsole\Commands\GenerateProductionProject;
-use Oneago\AdaConsole\Commands\KillDocker;
-use Oneago\AdaConsole\Commands\RunDocker;
+use Oneago\AdaConsole\Commands\DockerKill;
+use Oneago\AdaConsole\Commands\DockerPull;
+use Oneago\AdaConsole\Commands\DockerRun;
 use Oneago\AdaConsole\Commands\RunPhpServer;
+use Oneago\AdaConsole\Commands\RunRelease;
 use Oneago\AdaConsole\Commands\SassCompiler;
 use Oneago\AdaConsole\Commands\SassMaker;
+use Oneago\AdaConsole\Commands\TypeScriptCompile;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
@@ -19,11 +21,13 @@ $application->add(new CreateView());
 $application->add(new CreateMiddleware());
 $application->add(new CreateModel());
 $application->add(new RunPhpServer());
-$application->add(new RunDocker());
-$application->add(new KillDocker());
-$application->add(new GenerateProductionProject());
+$application->add(new DockerRun());
+$application->add(new DockerPull());
+$application->add(new DockerKill());
+$application->add(new RunRelease());
 $application->add(new SassCompiler());
 $application->add(new SassMaker());
+$application->add(new TypeScriptCompile());
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $application->run();

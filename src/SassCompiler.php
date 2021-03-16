@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SassCompiler extends Command
 {
-    protected static $defaultName = "make:sass:compile";
+    protected static $defaultName = "sass:compile";
 
     protected function configure()
     {

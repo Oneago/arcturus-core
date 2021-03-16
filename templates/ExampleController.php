@@ -12,17 +12,13 @@ use Oneago\AdaConsole\Bases\MiddlewareInterface;
  */
 class ExampleController extends TwigController
 {
-    private string $body;
-
     /**
      * ExampleController constructor.
-     * @param string $body Page body
      * @param MiddlewareInterface ...$middlewares
      */
-    public function __construct(string $body, MiddlewareInterface...$middlewares)
+    public function __construct(MiddlewareInterface...$middlewares)
     {
         parent::__construct(...$middlewares);
-        $this->body = $body;
         $this->render();
     }
 
@@ -32,9 +28,10 @@ class ExampleController extends TwigController
         if ($status) {
             /** @noinspection PhpUnhandledExceptionInspection */
             echo self::renderHTML("example.twig", [
-                "body" => $this->body
+                "body" => "Example page for basic php Oneago project"
             ]);
         } else {
+            // header("location: /{$_SESSION['lang']}/login?redirect={$_SERVER['REDIRECT_URL']}");      // Example
             echo "No correct passing middleware";
         }
     }
