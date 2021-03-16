@@ -19,7 +19,7 @@ use Twig\TwigFunction;
 abstract class BaseTwigController
 {
     protected Environment $templateEngine;
-    protected string $templatesPath = "../views";
+    /// protected string $templatesPath = "../views";
     /**
      * @var MiddlewareInterface[]
      */
@@ -33,7 +33,7 @@ abstract class BaseTwigController
     {
         $this->middlewares = $middlewares;
 
-        $loader = new FilesystemLoader($this->templatesPath);
+        $loader = new FilesystemLoader($this->getViewsDirs());
         $this->templateEngine = new Environment($loader, [
             "debug" => $_ENV["DEBUG_MODE"],
         ]);
@@ -70,6 +70,27 @@ abstract class BaseTwigController
         }));
 
         $this->checkMiddlewares();
+    }
+
+    /**
+     * @return array
+     */
+    private function getViewsDirs(): array
+    {
+        $parentDir = "../views";
+        $dirs = [$parentDir];
+
+        // Scan directories in view folder and returned in array
+        $scan = scandir($parentDir);
+        foreach ($scan as $x) {
+            if (is_dir("$parentDir/$x")) {
+                if ($x != '.' && $x != '..') {
+                    array_push($dirs, "$parentDir/$x");
+                }
+            }
+        }
+
+        return $dirs;
     }
 
     /**
