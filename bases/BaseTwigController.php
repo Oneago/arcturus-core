@@ -41,12 +41,13 @@ abstract class BaseTwigController
         if ($_ENV['DEBUG_MODE'])
             $this->templateEngine->addExtension(new DebugExtension());
 
-        $this->templateEngine->addGlobal('getServerVars', $_SERVER);
-        $this->templateEngine->addGlobal('getGetVars', $_GET);
-        $this->templateEngine->addGlobal('getPostVars', $_POST);
-        $this->templateEngine->addGlobal('getCookieVars', $_COOKIE);
-        $this->templateEngine->addGlobal('getSessionVars', $_SESSION);
-        $this->templateEngine->addGlobal('getEnvVars', $_ENV);
+        $this->templateEngine->addGlobal('SERVER', $_SERVER);
+        $this->templateEngine->addGlobal('GET', $_GET);
+        $this->templateEngine->addGlobal('POST', $_POST);
+        $this->templateEngine->addGlobal('COOKIE', $_COOKIE);
+        $this->templateEngine->addGlobal('ENV', $_ENV);
+        if (isset($_SESSION))
+            $this->templateEngine->addGlobal('SESSION', $_SESSION);
 
         $this->templateEngine->addFunction(new TwigFunction('getCss', function (string $cssFile) {
             return sprintf('/css/%s', ltrim($cssFile, '/'));
