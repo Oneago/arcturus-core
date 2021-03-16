@@ -89,7 +89,6 @@ abstract class BaseTwigController
                 }
             }
         }
-
         return $dirs;
     }
 
