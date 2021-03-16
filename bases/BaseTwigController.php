@@ -3,7 +3,7 @@
 
 namespace Oneago\AdaConsole\Bases;
 
-use Twig\Cache\CacheInterface;
+use DateTime;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -41,35 +41,31 @@ abstract class BaseTwigController
         if ($_ENV['DEBUG_MODE'])
             $this->templateEngine->addExtension(new DebugExtension());
 
-        $this->templateEngine->addGlobal("getScriptName", $_SERVER["SCRIPT_NAME"]);
-        $this->templateEngine->addGlobal("getRequestUri", $_SERVER["REQUEST_URI"]);
+        $this->templateEngine->addGlobal('getServerVars', $_SERVER);
+        $this->templateEngine->addGlobal('getGetVars', $_GET);
+        $this->templateEngine->addGlobal('getPostVars', $_POST);
+        $this->templateEngine->addGlobal('getCookieVars', $_COOKIE);
+        $this->templateEngine->addGlobal('getSessionVars', $_SESSION);
+        $this->templateEngine->addGlobal('getEnvVars', $_ENV);
 
-        $this->templateEngine->addFunction(new TwigFunction('getCss', function ($cssFile) {
+        $this->templateEngine->addFunction(new TwigFunction('getCss', function (string $cssFile) {
             return sprintf('/css/%s', ltrim($cssFile, '/'));
         }));
-        $this->templateEngine->addFunction(new TwigFunction('getJs', function ($cssFile) {
+        $this->templateEngine->addFunction(new TwigFunction('getJs', function (string $cssFile) {
             return sprintf('/js/%s', ltrim($cssFile, '/'));
         }));
-        $this->templateEngine->addFunction(new TwigFunction('getAssets', function ($assetsFile) {
+        $this->templateEngine->addFunction(new TwigFunction('getAssets', function (string $assetsFile) {
             return sprintf('/assets/%s', ltrim($assetsFile, '/'));
         }));
-        $this->templateEngine->addFunction(new TwigFunction('getServerVars', function () {
-            return $_SERVER;
+        $this->templateEngine->addFunction(new TwigFunction('serialize', function (object $object) {
+            return serialize($object);
         }));
-        $this->templateEngine->addFunction(new TwigFunction('getGetVars', function () {
-            return $_GET;
+        $this->templateEngine->addFunction(new TwigFunction('unserialize', function (string $object) {
+            return unserialize($object);
         }));
-        $this->templateEngine->addFunction(new TwigFunction('getPostVars', function () {
-            return $_POST;
-        }));
-        $this->templateEngine->addFunction(new TwigFunction('getCookieVars', function () {
-            return $_COOKIE;
-        }));
-        $this->templateEngine->addFunction(new TwigFunction('getSessionVars', function () {
-            return $_SESSION;
-        }));
-        $this->templateEngine->addFunction(new TwigFunction('getEnvVars', function () {
-            return $_ENV;
+        $this->templateEngine->addFunction(new TwigFunction('dateDiff', function (DateTime $start, DateTime $finish) {
+            $diff = $start->diff($finish);
+            return $diff->invert ? $diff->days * -1 : $diff->days;
         }));
 
         $this->checkMiddlewares();
@@ -89,6 +85,10 @@ abstract class BaseTwigController
         return $this->templateEngine->render($fileName, $data);
     }
 
+    /**
+     * Default return http 401 Unauthorized
+     * @return bool
+     */
     protected function checkMiddlewares(): bool
     {
         foreach ($this->middlewares as $middleware) {
