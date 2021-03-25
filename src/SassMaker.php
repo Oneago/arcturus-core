@@ -3,6 +3,7 @@
 
 namespace Oneago\AdaConsole\Commands;
 
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,7 +21,7 @@ class SassMaker extends Command
             ->addArgument("name", InputArgument::REQUIRED, "Name for sass file")
             ->addOption("component", "c", InputOption::VALUE_NONE, "sass component create")
             ->addOption("parent", "p", InputOption::VALUE_OPTIONAL, "sass parent to add import", "style.scss")
-            ->setHelp("This command create a sass file in www/css");
+            ->setHelp("This command create a sass file in public_html/css");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -32,37 +33,43 @@ class SassMaker extends Command
         $userName = get_current_user();
         $date = date("d/m/Y");
 
-        @mkdir("www");
-        @mkdir("www/css");
+        if (!mkdir("public_html") && !is_dir("public_html")) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', "public_html"));
+        }
+        if (!mkdir("public_html/css") && !is_dir("public_html/css")) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', "public_html/css"));
+        }
         if ($input->getOption("component")) {
-            @mkdir("www/css/components");
+            if (!mkdir("public_html/css/components") && !is_dir("public_html/css/components")) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', "public_html/css/components"));
+            }
             $name = "_$name";
-            $output->writeln("<info>Creating in www/css/components/$name</info>");
-            $fp = fopen("www/css/components/$name", "w+");
+            $output->writeln("<info>Creating in public_html/css/components/$name</info>");
+            $fp = fopen("public_html/css/components/$name", 'wb+');
             fwrite($fp, "/*" . PHP_EOL);
             fwrite($fp, " * $name" . PHP_EOL);
             fwrite($fp, " * Created by $userName" . PHP_EOL);
             fwrite($fp, " * $date" . PHP_EOL);
             fwrite($fp, " */" . PHP_EOL);
             fclose($fp);
-            exec("git add www/css/components/$name");
+            exec("git add public_html/css/components/$name");
 
 
             $name = str_replace("_", "", $name);
-            $fp = fopen("www/css/$parent", "a+");
+            $fp = fopen("public_html/css/$parent", 'ab+');
             fwrite($fp, PHP_EOL . "@import \"components/$name\";");
             fclose($fp);
 
         } else {
-            $output->writeln("<info>Creating in www/css/$name</info>");
-            $fp = fopen("www/css/$name", "w+");
+            $output->writeln("<info>Creating in public_html/css/$name</info>");
+            $fp = fopen("public_html/css/$name", 'wb+');
             fwrite($fp, "/*" . PHP_EOL);
             fwrite($fp, " * $name" . PHP_EOL);
             fwrite($fp, " * Created by $userName" . PHP_EOL);
             fwrite($fp, " * $date" . PHP_EOL);
             fwrite($fp, " */" . PHP_EOL);
             fclose($fp);
-            exec("git add www/css/$name");
+            exec("git add public_html/css/$name");
         }
 
         $output->writeln("<info>{$input->getArgument('name')} created!</info>");
