@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +23,7 @@ class RunPhpServer extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("<info>Running in http://{$input->getArgument('address')}</info>");
-        $output->writeln(shell_exec("cd www && php -S {$input->getArgument('address')}"));
+        $output->writeln(shell_exec("cd public_html && php -S {$input->getArgument('address')}"));
         $output->writeln("<info>Launch in {$input->getArgument('address')}</info>");
         return Command::SUCCESS;
     }

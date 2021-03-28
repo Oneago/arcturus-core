@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,7 +28,7 @@ class CreateModel extends Command
 
         $modelName = ucfirst($input->getArgument('model name')) . "Model.php";
         $output->writeln("<info>Creating {$modelName}</info>");
-        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php", "models");
+        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php", "app/Http/Models");
         $output->writeln("<info>{$modelName} Created!</info>");
         $output->writeln("");
 
@@ -38,7 +38,7 @@ class CreateModel extends Command
 
     private function createFile(string $name, string $templatePath, string $savePath)
     {
-        $fp = fopen("$savePath/$name", "w+");
+        $fp = fopen("$savePath/$name", 'wb+');
 
         $fileContent = file_get_contents($templatePath);
 

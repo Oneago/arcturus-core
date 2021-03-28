@@ -1,8 +1,9 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,7 +25,7 @@ class CreateView extends Command
             ->setHelp("This command create a new view passing a name");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dir = $input->getOption("dir");
 
@@ -41,11 +42,11 @@ class CreateView extends Command
         if (!$input->getOption('no-controller')) {
             $controllerName = ucfirst($dir ?? "") . ucfirst($input->getArgument('view name')) . "Controller.php";
             $output->writeln("<info>Creating {$controllerName}</info>");
-            if ($dir != null) {
+            if ($dir !== null) {
                 $cDir = ucfirst($dir);
-                $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "controllers", $cDir);
+                $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", $cDir);
             } else {
-                $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "controllers", null);
+                $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", null);
             }
             $output->writeln("<info>{$controllerName} Created!</info>");
             $output->writeln("");
@@ -61,13 +62,15 @@ class CreateView extends Command
      * @param string $savePath
      * @param string|null $newDirectory
      */
-    private function createFile(string $name, string $templatePath, string $savePath, ?string $newDirectory)
+    private function createFile(string $name, string $templatePath, string $savePath, ?string $newDirectory): void
     {
-        if ($newDirectory != null) {
-            @mkdir("$savePath/$newDirectory");
+        if ($newDirectory !== null) {
+            if (!mkdir("$savePath/$newDirectory") && !is_dir("$savePath/$newDirectory")) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', "$savePath/$newDirectory"));
+            }
             $savePath = "$savePath/$newDirectory";
         }
-        $fp = fopen("$savePath/$name", "w+");
+        $fp = fopen("$savePath/$name", 'wb+');
 
         $fileContent = file_get_contents($templatePath);
 
@@ -75,13 +78,13 @@ class CreateView extends Command
             [
                 "example.twig",
                 "ExampleController",
-                "App\Controllers",
+                "App\Http\Controllers",
                 " is a example class, you can delete or use as a model example for your app"
             ],
             [
                 $this->viewName,
                 str_replace(".php", "", $name),
-                "App\Controllers" . ($newDirectory != null ? "\\$newDirectory" : ""),
+                "App\Http\Controllers" . ($newDirectory !== null ? "\\$newDirectory" : ""),
                 ""
             ], $fileContent
         );
