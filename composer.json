@@ -1,35 +1,38 @@
 {
-    "name": "oneago/ada-console",
-    "description": "Console for oneago/oneago-php-template",
-    "type": "library",
-    "license": "MIT",
-    "require": {
-        "php": ">=8.0",
-        "ext-zip": "*",
-        "symfony/console": "^5.2",
-        "twig/twig": "^3.3"
+  "name": "oneago/arcturus-core",
+  "description": "Console for oneago/arcturus-project",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.0",
+    "ext-zip": "*",
+    "symfony/console": "^5.2",
+    "twig/twig": "^3.3"
+  },
+  "authors": [
+    {
+      "name": "jruedaq",
+      "email": "jrueda@oneago.com",
+      "homepage": "https://www.juandavid.dev",
+      "role": "Developer"
     },
-    "authors": [
-        {
-            "name": "jruedaq",
-            "email": "jrueda@oneago.com",
-            "homepage": "https://www.juandavid.dev",
-            "role": "Developer"
-        },
-        {
-            "name": "Oneago",
-            "email": "support@oneago.com",
-            "homepage": "https://www.oneago.com/",
-            "role": "Maintainer"
+    {
+      "name": "Oneago",
+      "email": "support@oneago.com",
+      "homepage": "https://www.oneago.com/",
+      "role": "Maintainer"
         }
     ],
     "bin": [
         "bin/ada"
     ],
     "autoload": {
-        "psr-4": {
-            "Oneago\\AdaConsole\\Commands\\": "src/",
-            "Oneago\\AdaConsole\\Bases\\": "bases/"
-        }
+      "psr-4": {
+        "Oneago\\Arcturus\\Commands\\": "commands/",
+        "Oneago\\Arcturus\\Core\\": "core/"
+      },
+      "files": [
+        "core/helpers.php"
+      ]
     }
 }

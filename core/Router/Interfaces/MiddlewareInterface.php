@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Bases;
+namespace Oneago\Arcturus\Core\Router\Interfaces;
 
 
 interface MiddlewareInterface

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Bases;
+namespace Oneago\Arcturus\Core\config;
 
 use DateTime;
 use Twig\Environment;
@@ -14,25 +14,17 @@ use Twig\TwigFunction;
 
 
 /**
- * Class BaseTwigController is a basic twig loader
+ * Class BaseTwigConfig is a basic twig loader
  */
-abstract class BaseTwigController
+abstract class BaseTwigConfig
 {
     protected Environment $templateEngine;
-    /// protected string $templatesPath = "../views";
-    /**
-     * @var MiddlewareInterface[]
-     */
-    protected array $middlewares;
 
     /**
-     * BaseTwigController constructor.
-     * @param MiddlewareInterface ...$middlewares
+     * BaseTwigConfig constructor.
      */
-    public function __construct(MiddlewareInterface ...$middlewares)
+    public function __construct()
     {
-        $this->middlewares = $middlewares;
-
         $loader = new FilesystemLoader($this->getViewsDirs());
         $this->templateEngine = new Environment($loader, [
             "debug" => $_ENV["DEBUG_MODE"],
@@ -68,8 +60,6 @@ abstract class BaseTwigController
             $diff = $start->diff($finish);
             return $diff->invert ? $diff->days * -1 : $diff->days;
         }));
-
-        $this->checkMiddlewares();
     }
 
     /**
@@ -84,8 +74,8 @@ abstract class BaseTwigController
         $scan = scandir($parentDir);
         foreach ($scan as $x) {
             if (is_dir("$parentDir/$x")) {
-                if ($x != '.' && $x != '..') {
-                    array_push($dirs, "$parentDir/$x");
+                if ($x !== '.' && $x !== '..') {
+                    $dirs[] = "$parentDir/$x";
                 }
             }
         }
@@ -106,20 +96,5 @@ abstract class BaseTwigController
         return $this->templateEngine->render($fileName, $data);
     }
 
-    /**
-     * Default return http 401 Unauthorized
-     * @return bool
-     */
-    protected function checkMiddlewares(): bool
-    {
-        foreach ($this->middlewares as $middleware) {
-            if (!$middleware->check()) {
-                http_response_code(401);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public abstract function render();
+    abstract public function render();
 }

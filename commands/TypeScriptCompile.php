@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

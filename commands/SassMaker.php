@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;

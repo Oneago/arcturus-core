@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\Middlewares;
+namespace App\Http\Middlewares;
 
 
-use Oneago\AdaConsole\Bases\MiddlewareInterface;
+use Oneago\Arcturus\Core\Router\Interfaces\MiddlewareInterface;
 
 /**
  * Class ExampleMiddleware
- * @package App\Middlewares
+ * @package App\Http\Middlewares
  */
 class ExampleMiddleware implements MiddlewareInterface
 {

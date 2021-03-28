@@ -1,10 +1,11 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,7 +24,7 @@ class RunRelease extends Command
             ->setHelp("This command create a zip file with files for production server");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Generating Release</info>");
         $this->recurse_copy(); // Copy project files
@@ -34,7 +35,9 @@ class RunRelease extends Command
         $zipDir = "release";
         $zipName = $input->getArgument('name');
         unlink("$zipDir/$zipName.zip"); // Delete old file
-        @mkdir($zipDir);
+        if (!mkdir($zipDir) && !is_dir($zipDir)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $zipDir));
+        }
 
         $zip = new ZipArchive;
         if ($zip->open("$zipDir/$zipName.zip", ZipArchive::CREATE) === TRUE) {
@@ -55,12 +58,14 @@ class RunRelease extends Command
     private function recurse_copy(string $src = ".", string $dst = "out")
     {
         $dir = opendir($src);
-        @mkdir($dst);
+        if (!mkdir($dst) && !is_dir($dst)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $dst));
+        }
 
         $excluded = ["Dockerfile", "docker-compose.yml", "composer.lock", "temp", "LICENSE", "ada", ".gitignore", "commands", ".git", "out", "vendor", ".idea", "postinit", ".DS_Store", "Dockerfile", "docker-compose.yml"];
         while (false !== ($file = readdir($dir))) {
-            if (!in_array($file, $excluded)) {
-                if (($file != '.') && ($file != '..')) {
+            if (!in_array($file, $excluded, true)) {
+                if (($file !== '.') && ($file !== '..')) {
                     if (is_dir($src . '/' . $file)) {
                         $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
                     } else {
@@ -98,7 +103,7 @@ class RunRelease extends Command
         if (is_dir($src)) {
             $objects = scandir($src);
             foreach ($objects as $object) {
-                if ($object != "." && $object != ".." && $object != "released.zip") {
+                if ($object !== "." && $object !== ".." && $object !== "released.zip") {
                     if (is_dir("$src/$object")) {
                         $this->flush_folder("$src/$object");
                     } else {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Oneago\AdaConsole\Commands;
+namespace Oneago\Arcturus\Commands;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,7 +12,7 @@ class CreateMiddleware extends Command
 {
     protected static $defaultName = "make:middleware";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Create a new middleware for this app")
@@ -20,7 +20,12 @@ class CreateMiddleware extends Command
             ->setHelp("This command create a new middleware passing a name");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Creating {$input->getArgument('middleware name')}</info>");
         $output->writeln("<info>Wait a moment please...</info>");
@@ -28,7 +33,7 @@ class CreateMiddleware extends Command
 
         $middlewareName = ucfirst($input->getArgument('middleware name')) . "Middleware.php";
         $output->writeln("<info>Creating {$middlewareName}</info>");
-        $this->createFile($middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php", "middlewares");
+        $this->createFile($middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php", "app/Http/Middlewares");
         $output->writeln("<info>{$middlewareName} Created!</info>");
         $output->writeln("");
 
@@ -36,9 +41,14 @@ class CreateMiddleware extends Command
         return Command::SUCCESS;
     }
 
-    private function createFile(string $name, string $templatePath, string $savePath)
+    /**
+     * @param string $name
+     * @param string $templatePath
+     * @param string $savePath
+     */
+    private function createFile(string $name, string $templatePath, string $savePath): void
     {
-        $fp = fopen("$savePath/$name", "w+");
+        $fp = fopen("$savePath/$name", 'wb+');
 
         $fileContent = file_get_contents($templatePath);
 
