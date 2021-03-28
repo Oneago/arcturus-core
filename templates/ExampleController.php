@@ -28,7 +28,7 @@ class ExampleController extends TwigController
         if ($status) {
             /** @noinspection PhpUnhandledExceptionInspection */
             echo self::renderHTML("example.twig", [
-                "body" => "Example page for basic php Oneago project"
+                "body" => "Example page for basic php Oneago project. Start creating."
             ]);
         } else {
             // header("location: /{$_SESSION['lang']}/login?redirect={$_SERVER['REDIRECT_URL']}");      // Example
