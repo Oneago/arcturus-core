@@ -11,8 +11,8 @@ if (!function_exists('template')) {
 }
 
 if (!function_exists('view')) {
-    function view(string $view, string $viewFolder = null): ViewRequest
+    function view(string $view, string $viewFolder = null, array $customVars = null): ViewRequest
     {
-        return new ViewRequest($view, $viewFolder);
+        return new ViewRequest($view, $viewFolder, $customVars);
     }
 }

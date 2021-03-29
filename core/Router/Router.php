@@ -61,22 +61,64 @@ class Router implements RouterInterface
      */
     public function map(array $methods, string $pattern, callable $callable): void
     {
-        if (!$this->isResourceFound) {
-            $splitPattern = explode('/', $pattern);
-            if ($this->request->getResource() === $splitPattern[1]) {
-                if (in_array($this->request->getMethod(), $methods, true)) {
-                    $return = $callable(request: $this->request);
-                    if (!$return instanceof ViewRequest) {
-                        echo "Callable return isn't a ViewRequest instance";
-                    }
+        if (!$this->isResourceFound && $this->isRequestResource($pattern)) {
+            if (in_array($this->request->getMethod(), $methods, true)) {
+                $args = $this->exportVars($pattern);
+                $return = $callable(request: $this->request, args: $args);
+                if (!$return instanceof ViewRequest && !is_string($return)) {
+                    throw new Exception("Callable return isn't a ViewRequest instance or string");
+                } else if ($return instanceof ViewRequest) {
                     $this->responseHTML = $return->getHTML();
-                    $this->is404 = false;
-                    $this->isResourceFound = true;
                 } else {
-                    http_response_code(405);
+                    $this->responseHTML = $return;
                 }
+                $this->is404 = false;
+                $this->isResourceFound = true;
+            } else {
+                http_response_code(405);
             }
         }
+    }
+
+    /**
+     * @param string $pathPattern
+     * @return bool
+     */
+    private function isRequestResource(string $pathPattern): bool
+    {
+        $status = false;
+        $requestObject = array_filter((explode('/', $this->request->getPathRequest())), fn($x) => !is_null($x) && $x !== '');
+        $pathPattern = array_filter((explode('/', $pathPattern)), fn($x) => !is_null($x) && $x !== '');
+        $requestObject[0] = $requestObject[0] ?? '';
+        $pathPattern[0] = $pathPattern[0] ?? '';
+        for ($i = 0, $iMax = count($pathPattern); $i < $iMax; $i++) {
+            preg_match('/{\w+}/', $pathPattern[$i], $match);
+            if (count($match) !== 0) {
+                continue;
+            }
+            $status = $requestObject[$i] === $pathPattern[$i];
+        }
+        return $status;
+    }
+
+    /**
+     * @param string $PathPatternRequest
+     * @return array
+     */
+    private function exportVars(string $PathPatternRequest): array
+    {
+        $args = [];
+        $requestObject = explode('/', $this->request->getPathRequest());
+        $PathPatternRequest = explode('/', $PathPatternRequest);
+        for ($i = 0, $iMax = count($PathPatternRequest); $i < $iMax; $i++) {
+            preg_match('/{\w+}/', $PathPatternRequest[$i], $match);
+            if (count($match) > 0) {
+                $varName = str_replace(['{', '}'], ['', ''], $match)[0];
+                $$varName = $requestObject[$i];
+                $args[$varName] = urldecode($requestObject[$i]);
+            }
+        }
+        return $args;
     }
 
     /**

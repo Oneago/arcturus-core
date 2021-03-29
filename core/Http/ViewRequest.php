@@ -12,11 +12,13 @@ class ViewRequest
      * Router constructor.
      * @param string $view
      * @param string|null $viewFolder
+     * @param array|null $customVars
      * @param string $controllerMethod
      */
     #[Pure] public function __construct(
         protected string $view,
         protected ?string $viewFolder = null,
+        protected ?array $customVars = null,
         protected string $controllerMethod = 'index'
     )
     {
@@ -33,7 +35,7 @@ class ViewRequest
         $response = call_user_func([
             new $controller,
             $this->controllerMethod
-        ], $this->view);
+        ], $this->view, $this->customVars);
 
         if ($response instanceof ViewResponse) {
             return $response->render();

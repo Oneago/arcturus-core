@@ -12,23 +12,15 @@ use Oneago\Arcturus\Core\Http\ViewResponse;
  */
 class ExampleController
 {
-    public function index($view): ViewResponse
+    public function index(string $view, ?array $customVars): ViewResponse
     {
-<<<<<<< HEAD
-        $status = self::checkMiddlewares();
-        if ($status) {
-            /** @noinspection PhpUnhandledExceptionInspection */
-            echo self::renderHTML("example.twig", [
-                "body" => "Example page for basic php Oneago project. Start creating."
-            ]);
-        } else {
-            // header("location: /{$_SESSION['lang']}/login?redirect={$_SERVER['REDIRECT_URL']}");      // Example
-            echo "No correct passing middleware";
+        $twigVars = [
+            "body" => "Example page for basic php Oneago project. Start creating."
+        ];
+
+        if ($customVars !== null) {
+            $twigVars = array_merge($customVars, $twigVars);
         }
-=======
-        return template($view, [
-            "body" => "Example page for basic php Oneago project"
-        ]);
->>>>>>> refs/remotes/origin/master
+        return template($view, $twigVars);
     }
 }

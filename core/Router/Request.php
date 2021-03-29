@@ -10,7 +10,7 @@ class Request
     private string $root;
     private string $port;
     private string $method;
-    private array $urlRequest;
+    private string $pathRequest;
 
     /**
      * Router constructor.
@@ -21,7 +21,7 @@ class Request
         $this->root = $_SERVER['HTTP_HOST'];
         $this->port = $_SERVER['SERVER_PORT'];
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-        $this->urlRequest = explode('/', $_SERVER['REQUEST_URI'], 3) ?: ['Error splitting URL'];
+        $this->pathRequest = $_SERVER['REQUEST_URI'];
     }
 
     /**
@@ -59,13 +59,8 @@ class Request
     /**
      * @return array
      */
-    public function getUrlRequest(): array
+    public function getPathRequest(): string
     {
-        return $this->urlRequest;
-    }
-
-    public function getResource(): string
-    {
-        return $this->urlRequest[1];
+        return $this->pathRequest;
     }
 }
