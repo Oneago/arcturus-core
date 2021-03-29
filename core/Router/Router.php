@@ -86,19 +86,24 @@ class Router implements RouterInterface
      */
     private function isRequestResource(string $pathPattern): bool
     {
-        $status = false;
         $requestObject = array_filter((explode('/', $this->request->getPathRequest())), fn($x) => !is_null($x) && $x !== '');
         $pathPattern = array_filter((explode('/', $pathPattern)), fn($x) => !is_null($x) && $x !== '');
-        $requestObject[0] = $requestObject[0] ?? '';
-        $pathPattern[0] = $pathPattern[0] ?? '';
-        for ($i = 0, $iMax = count($pathPattern); $i < $iMax; $i++) {
+
+        if (count($requestObject) === 0 && 0 === count($pathPattern)) {
+            return true;
+        }
+
+        for ($i = 1, $iMax = count($pathPattern); $i < $iMax; $i++) {
             preg_match('/{\w+}/', $pathPattern[$i], $match);
             if (count($match) !== 0) {
                 continue;
             }
-            $status = $requestObject[$i] === $pathPattern[$i];
+
+            if ($requestObject[$i] === $pathPattern[$i]) {
+                return true;
+            }
         }
-        return $status;
+        return false;
     }
 
     /**
