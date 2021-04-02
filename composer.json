@@ -6,6 +6,7 @@
   "require": {
     "php": ">=8.0",
     "ext-zip": "*",
+    "ext-pdo": "*",
     "symfony/console": "^5.2",
     "twig/twig": "^3.3"
   },
