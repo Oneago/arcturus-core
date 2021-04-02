@@ -16,7 +16,12 @@ class Router implements RouterInterface
     private bool $is404 = true;
     private bool $isResourceFound = false;
     private ?string $custom404Page;
-    private ?string $responseHTML;
+    private ?string $responseHTML = null;
+
+    public const MIDDLEWARE_REDIRECT_ON_FAIL = 0;
+    public const MIDDLEWARE_MESSAGE_ON_FAIL = 1;
+    private int $middlewareFailMode = -1;
+    private string $middlewareFailAction;
 
     /**
      * Router constructor.
@@ -28,49 +33,110 @@ class Router implements RouterInterface
 
     /**
      * @param MiddlewareInterface[] $middlewares
-     * @param callable $failAction
-     * @return Router|null
+     * @return bool
      */
-    public static function middleware(array $middlewares, callable $failAction): ?Router
+    private function checkMiddlewares(MiddlewareInterface...$middlewares): bool
     {
-        $status = true;
         foreach ($middlewares as $middleware) {
-            if ($middleware->check()) {
-                $failAction();
-                $status = false;
+            if (!$middleware->check()) {
+                http_response_code(401);
+                return false;
             }
         }
 
-        if ($status) {
-            return new Router();
-        }
-        return null;
+        return true;
+    }
+
+
+    public static function enableSessions(): void
+    {
+        session_start();
+        session_regenerate_id(true);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get(string $pattern, callable $callable): void
+    public function get(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
     {
-        $this->map(['GET'], $pattern, $callable);
+        $this->map(['GET'], $pattern, $callable, ...$middlewares);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function post(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
+    {
+        $this->map(['POST'], $pattern, $callable, ...$middlewares);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function put(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
+    {
+        $this->map(['PUT'], $pattern, $callable, ...$middlewares);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function patch(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
+    {
+        $this->map(['PATCH'], $pattern, $callable, ...$middlewares);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
+    {
+        $this->map(['DELETE'], $pattern, $callable, ...$middlewares);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function options(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
+    {
+        $this->map(['OPTIONS'], $pattern, $callable, ...$middlewares);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function any(string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
+    {
+        $this->map(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], $pattern, $callable, ...$middlewares);
     }
 
     /**
      * {@inheritdoc}
      * @throws Exception
      */
-    public function map(array $methods, string $pattern, callable $callable): void
+    public function map(array $methods, string $pattern, callable $callable, MiddlewareInterface...$middlewares): void
     {
         if (!$this->isResourceFound && $this->isRequestResource($pattern)) {
             if (in_array($this->request->getMethod(), $methods, true)) {
                 $args = $this->exportVars($pattern);
-                $return = $callable(request: $this->request, args: $args);
-                if (!$return instanceof ViewRequest && !is_string($return)) {
-                    throw new Exception("Callable return isn't a ViewRequest instance or string");
-                } else if ($return instanceof ViewRequest) {
-                    $this->responseHTML = $return->getHTML();
+                if ($this->checkMiddlewares(...$middlewares)) {
+                    $return = $callable(request: $this->request, args: $args);
+                    if (!$return instanceof ViewRequest && !is_string($return)) {
+                        throw new Exception("Callable return isn't a ViewRequest instance or string");
+                    } else if ($return instanceof ViewRequest) {
+                        $this->responseHTML = $return->getHTML();
+                    } else {
+                        $this->responseHTML = $return;
+                    }
+                } else if ($this->middlewareFailMode === self::MIDDLEWARE_REDIRECT_ON_FAIL) {
+                    http_response_code(401);
+                    header("Location: {$this->middlewareFailAction}");
+                } else if ($this->middlewareFailMode === self::MIDDLEWARE_MESSAGE_ON_FAIL) {
+                    http_response_code(401);
+                    echo $this->middlewareFailAction;
                 } else {
-                    $this->responseHTML = $return;
+                    http_response_code(401);
+                    var_dump($this->middlewareFailMode);
                 }
                 $this->is404 = false;
                 $this->isResourceFound = true;
@@ -131,54 +197,6 @@ class Router implements RouterInterface
     /**
      * {@inheritdoc}
      */
-    public function post(string $pattern, callable $callable): void
-    {
-        $this->map(['POST'], $pattern, $callable);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function put(string $pattern, callable $callable): void
-    {
-        $this->map(['PUT'], $pattern, $callable);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function patch(string $pattern, callable $callable): void
-    {
-        $this->map(['PATCH'], $pattern, $callable);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete(string $pattern, callable $callable): void
-    {
-        $this->map(['DELETE'], $pattern, $callable);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function options(string $pattern, callable $callable): void
-    {
-        $this->map(['OPTIONS'], $pattern, $callable);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function any(string $pattern, callable $callable): void
-    {
-        $this->map(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], $pattern, $callable);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function redirect(string $target, int $status = 302): void
     {
         http_response_code($status);
@@ -192,7 +210,7 @@ class Router implements RouterInterface
             if ($this->custom404Page !== null) {
                 echo $this->custom404Page;
             }
-        } else {
+        } elseif ($this->responseHTML !== null) {
             echo $this->responseHTML;
         }
     }
@@ -207,5 +225,15 @@ class Router implements RouterInterface
             echo "Callable return isn't a ViewRequest instance";
         }
         $this->custom404Page = $return->getHTML();
+    }
+
+    /**
+     * @param string $middlewareFailAction Redirect url if mode is MIDDLEWARE_REDIRECT_ON_FAIL else if mode is MIDDLEWARE_MESSAGE_ON_FAIL shows message
+     * @param int $middlewareFailMode
+     */
+    public function setCustomMiddlewareFail(string $middlewareFailAction, int $middlewareFailMode = self::MIDDLEWARE_MESSAGE_ON_FAIL): void
+    {
+        $this->middlewareFailMode = $middlewareFailMode;
+        $this->middlewareFailAction = $middlewareFailAction;
     }
 }
