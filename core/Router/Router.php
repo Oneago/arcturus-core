@@ -94,7 +94,7 @@ class Router implements RouterInterface
             return true;
         }
 
-        for ($i = 1, $iMax = count($pathPattern); $i < $iMax; $i++) {
+        for ($i = 1, $iMax = count($pathPattern); $i <= $iMax; $i++) {
             preg_match('/{\w+}/', $pathPattern[$i], $match);
             if (count($match) !== 0) {
                 continue;
