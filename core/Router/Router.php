@@ -87,7 +87,8 @@ class Router implements RouterInterface
     private function isRequestResource(string $pathPattern): bool
     {
         $pathRequest = $this->request->getPathRequest();
-        $requestObject = array_filter((explode('/', substr($pathRequest, 0, strpos($pathRequest, "?")))), fn($x) => !is_null($x) && $x !== '');
+        $pathRequest = str_contains($pathRequest, "?") ? substr($pathRequest, 0, strpos($pathRequest, "?")) : $pathRequest;
+        $requestObject = array_filter((explode('/', $pathRequest)), fn($x) => !is_null($x) && $x !== '');
         $pathPattern = array_filter((explode('/', $pathPattern)), fn($x) => !is_null($x) && $x !== '');
 
         if (count($requestObject) === 0 && 0 === count($pathPattern)) {
