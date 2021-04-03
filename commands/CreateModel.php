@@ -28,7 +28,7 @@ class CreateModel extends Command
 
         $modelName = ucfirst($input->getArgument('model name')) . "Model.php";
         $output->writeln("<info>Creating {$modelName}</info>");
-        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php", "app/Http/Models");
+        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php", "app/Models");
         $output->writeln("<info>{$modelName} Created!</info>");
         $output->writeln("");
 
