@@ -30,20 +30,20 @@ class ExampleModel extends Connection
     }
 
     /**
-     * @param $object
+     * @param object $object
      * @return bool
      */
-    public function create($object): bool
+    public function create(object $object): bool
     {
         // TODO: Implement create() method.
         throw new BadMethodCallException("Create not enable");
     }
 
     /**
-     * @param $object
+     * @param object $object
      * @return bool
      */
-    public function update($object): bool
+    public function update(object $object): bool
     {
         // TODO: Implement update() method.
         throw new BadMethodCallException("Update not enable");

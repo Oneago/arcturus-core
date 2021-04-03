@@ -40,9 +40,9 @@ abstract class Connection
 
     abstract public function list(string $search = null): ?array;
 
-    abstract public function create($object): bool;
+    abstract public function create(object $object): bool;
 
-    abstract public function update($object): bool;
+    abstract public function update(object $object): bool;
 
     abstract public function delete(int $id): bool;
 }
