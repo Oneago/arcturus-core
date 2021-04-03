@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DockerBuild extends Command
 {
-    protected static $defaultName = "docker:pull";
+    protected static $defaultName = "docker:build";
 
     protected function configure()
     {
