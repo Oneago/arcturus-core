@@ -187,8 +187,8 @@ class Router implements RouterInterface
             preg_match('/{\w+}/', $PathPatternRequest[$i], $match);
             if (count($match) > 0) {
                 $varName = str_replace(['{', '}'], ['', ''], $match)[0];
-                $$varName = $requestObject[$i];
-                $args[$varName] = urldecode($requestObject[$i]);
+                $$varName = $requestObject[$i] ?? null;
+                $args[$varName] = urldecode($requestObject[$i] ?? null);
             }
         }
         return $args;
