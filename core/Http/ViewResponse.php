@@ -18,7 +18,7 @@ class ViewResponse extends TwigConfig
 
     public function render(): string
     {
-        $view = $this->twigView;
+        $view = ucfirst($this->twigView);
         /** @noinspection PhpUnhandledExceptionInspection */
         return $this->renderHTML("$view.twig", $this->twigVariables);
     }

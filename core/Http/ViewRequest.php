@@ -50,7 +50,7 @@ class ViewRequest
     #[Pure] private function getController(): string
     {
         $controller = ucfirst($this->view);
-        $folder = $this->viewFolder === null ? "" : "\\{$this->viewFolder}";
+        $folder = $this->viewFolder === null ? "" : "\\" . ucfirst($this->viewFolder);
         return "App\Http\Controllers$folder\\{$controller}Controller";
     }
 }
