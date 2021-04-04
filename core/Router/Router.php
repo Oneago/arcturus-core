@@ -161,17 +161,18 @@ class Router implements RouterInterface
             return true;
         }
 
+        $status = false;
         for ($i = 1, $iMax = count($pathPattern); $i <= $iMax; $i++) {
             preg_match('/{\w+}/', $pathPattern[$i], $match);
             if (count($match) !== 0) {
+                //$status = true;
                 continue;
             }
 
-            if ($requestObject[$i] === $pathPattern[$i]) {
-                return true;
-            }
+            $status = ($requestObject[$i] ?? null) === $pathPattern[$i];
         }
-        return false;
+
+        return $status;
     }
 
     /**
