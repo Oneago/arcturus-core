@@ -161,7 +161,7 @@ class Router implements RouterInterface
             return true;
         }
 
-        $status = false;
+        $status = count($pathPattern) === 0 ? [false] : [];
         for ($i = 1, $iMax = count($pathPattern); $i <= $iMax; $i++) {
             preg_match('/{\w+}/', $pathPattern[$i], $match);
             if (count($match) !== 0) {
@@ -169,10 +169,10 @@ class Router implements RouterInterface
                 continue;
             }
 
-            $status = ($requestObject[$i] ?? null) === $pathPattern[$i];
+            $status[] = ($requestObject[$i] ?? null) === $pathPattern[$i];
         }
 
-        return $status;
+        return !in_array(false, $status, true);
     }
 
     /**
