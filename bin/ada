@@ -12,6 +12,7 @@ use Oneago\Arcturus\Commands\DockerRun;
 use Oneago\Arcturus\Commands\RunPhpServer;
 use Oneago\Arcturus\Commands\RunRelease;
 use Oneago\Arcturus\Commands\SassCompiler;
+use Oneago\Arcturus\Commands\SassWatch;
 use Oneago\Arcturus\Commands\SassMaker;
 use Oneago\Arcturus\Commands\TypeScriptCompile;
 use Symfony\Component\Console\Application;
@@ -28,6 +29,7 @@ $application->add(new DockerBuild());
 $application->add(new DockerKill());
 $application->add(new RunRelease());
 $application->add(new SassCompiler());
+$application->add(new SassWatch());
 $application->add(new SassMaker());
 $application->add(new TypeScriptCompile());
 
