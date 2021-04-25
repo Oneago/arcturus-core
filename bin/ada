@@ -2,6 +2,7 @@
 <?php
 require __DIR__ . '/../../../../vendor/autoload.php';
 
+use Oneago\Arcturus\Commands\CreateApi;
 use Oneago\Arcturus\Commands\CreateMiddleware;
 use Oneago\Arcturus\Commands\CreateModel;
 use Oneago\Arcturus\Commands\CreateView;
@@ -12,13 +13,14 @@ use Oneago\Arcturus\Commands\DockerRun;
 use Oneago\Arcturus\Commands\RunPhpServer;
 use Oneago\Arcturus\Commands\RunRelease;
 use Oneago\Arcturus\Commands\SassCompiler;
-use Oneago\Arcturus\Commands\SassWatch;
 use Oneago\Arcturus\Commands\SassMaker;
+use Oneago\Arcturus\Commands\SassWatch;
 use Oneago\Arcturus\Commands\TypeScriptCompile;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
+$application->add(new CreateApi());
 $application->add(new CreateView());
 $application->add(new CreateMiddleware());
 $application->add(new CreateModel());

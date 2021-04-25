@@ -6,6 +6,7 @@ namespace Oneago\Arcturus\Core\Router;
 
 use Exception;
 use JetBrains\PhpStorm\Pure;
+use Oneago\Arcturus\Core\Http\ApiRequest;
 use Oneago\Arcturus\Core\Http\ViewRequest;
 use Oneago\Arcturus\Core\Router\Interfaces\MiddlewareInterface;
 use Oneago\Arcturus\Core\Router\Interfaces\RouterInterface;
@@ -121,10 +122,12 @@ class Router implements RouterInterface
                 $args = $this->exportVars($pattern);
                 if ($this->checkMiddlewares(...$middlewares)) {
                     $return = $callable(request: $this->request, args: $args);
-                    if (!$return instanceof ViewRequest && !is_string($return)) {
-                        throw new Exception("Callable return isn't a ViewRequest instance or string");
+                    if (!$return instanceof ViewRequest && !$return instanceof ApiRequest && !is_string($return)) {
+                        throw new Exception("Callable return isn't a ViewRequest, ApiRequest instance or string");
                     } else if ($return instanceof ViewRequest) {
                         $this->responseHTML = $return->getHTML();
+                    } else if ($return instanceof ApiRequest) {
+                        $this->responseHTML = $return->run();
                     } else {
                         $this->responseHTML = $return;
                     }

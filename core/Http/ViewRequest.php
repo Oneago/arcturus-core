@@ -41,7 +41,11 @@ class ViewRequest
             return $response->render();
         }
 
-        throw new Exception("Error processing request, response no is instance of App\Http\ViewResponse", 1);
+        if (is_string($response)) {
+            return $response;
+        }
+
+        throw new Exception("Error processing request, response no is instance of App\Http\ViewResponse or String", 1);
     }
 
     /**

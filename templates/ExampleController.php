@@ -15,9 +15,9 @@ class ExampleController
     /**
      * @param string $view Template defined in router
      * @param array|null $customVars Vars defined in router
-     * @return ViewResponse
+     * @return string|ViewResponse
      */
-    public function index(string $view, ?array $customVars): ViewResponse
+    public function index(string $view, ?array $customVars): string|ViewResponse
     {
         $twigVars = [
             "body" => "Example page for basic php Oneago project. Start creating."
