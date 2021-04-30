@@ -52,7 +52,7 @@ class Router implements RouterInterface
     public static function enableSessions(): void
     {
         session_start();
-        session_regenerate_id(true);
+        session_regenerate_id(false);
     }
 
     /**
