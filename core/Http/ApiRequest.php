@@ -11,11 +11,13 @@ class ApiRequest
     /**
      * Router constructor.
      * @param string $apiFile
+     * @param string|null $apiFolder
      * @param array|null $arrayArgs
      * @param string $apiMethod
      */
     #[Pure] public function __construct(
         protected string $apiFile,
+        protected ?string $apiFolder = null,
         protected ?array $arrayArgs = null,
         protected string $apiMethod = 'index'
     )
@@ -49,6 +51,7 @@ class ApiRequest
     #[Pure] private function getApi(): string
     {
         $api = ucfirst($this->apiFile);
-        return "App\Http\Apis\\{$api}Api";
+        $folder = $this->apiFolder === null ? "" : "\\" . ucfirst($this->apiFolder);
+        return "App\Http\Apis$folder\\{$api}Api";
     }
 }

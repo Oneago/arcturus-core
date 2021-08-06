@@ -20,8 +20,8 @@ if (!function_exists('view')) {
 }
 
 if (!function_exists('api')) {
-    #[Pure] function api(string $apiFile, array $arrayArgs = null, string $apiMethod = 'index'): ApiRequest
+    #[Pure] function api(string $apiFile, string $apiFolder = null, array $arrayArgs = null, string $apiMethod = 'index'): ApiRequest
     {
-        return new ApiRequest($apiFile, $arrayArgs, $apiMethod);
+        return new ApiRequest($apiFile, $apiFolder, $arrayArgs, $apiMethod);
     }
 }
