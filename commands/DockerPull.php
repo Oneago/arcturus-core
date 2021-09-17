@@ -22,8 +22,15 @@ class DockerPull extends Command
     {
         $output->writeln("<info>Pulling docker-compose.yml</info>");
         $output->writeln("");
-        $output->writeln(shell_exec("docker-compose pull"));
-        $output->writeln("<info>Pulling ok</info>");
-        return Command::SUCCESS;
+        exec("docker-compose pull", $out, $code);
+        $output->writeln($out);
+        if ($code === 0) {
+            $output->writeln($out);
+            $output->writeln("<info>Pulling ok</info>");
+            return Command::SUCCESS;
+        }
+
+        $output->writeln("<error>Error pulling docker</error>");
+        return Command::FAILURE;
     }
 }

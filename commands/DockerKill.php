@@ -22,7 +22,14 @@ class DockerKill extends Command
     {
         $output->writeln("<info>Killing docker-compose.yml</info>");
         $output->writeln("");
-        $output->writeln(shell_exec("docker-compose kill"));
-        return Command::SUCCESS;
+        exec("docker-compose kill", $out, $code);
+        $output->writeln($out);
+        if ($code === 0) {
+            $output->writeln($out);
+            return Command::SUCCESS;
+        }
+
+        $output->writeln("<error>Error killing docker</error>");
+        return Command::FAILURE;
     }
 }

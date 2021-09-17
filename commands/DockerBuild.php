@@ -22,8 +22,14 @@ class DockerBuild extends Command
     {
         $output->writeln("<info>Pulling docker-compose.yml</info>");
         $output->writeln("");
-        $output->writeln(shell_exec("docker-compose build"));
-        $output->writeln("<info>Pulling ok</info>");
-        return Command::SUCCESS;
+        exec("docker-compose build", $out, $code);
+        $output->writeln($out);
+        if ($code === 0) {
+            $output->writeln("<info>Building ok</info>");
+            return Command::SUCCESS;
+        }
+
+        $output->writeln("<error>Error running docker</error>");
+        return Command::FAILURE;
     }
 }

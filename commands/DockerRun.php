@@ -23,10 +23,16 @@ class DockerRun extends Command
         $output->writeln("<info>Running docker-compose.yml</info>");
         $output->writeln("");
         $output->writeln("<info>Mount containers</info>");
-        $output->writeln(shell_exec("docker-compose up -d"));
-        $output->writeln("<info>Apache Server in http://localhost:8080</info>");
-        $output->writeln("<info>PhpMyAdmin in http://localhost:8081</info>");
-        $output->writeln("<info>MySQL Service in localhost:9906</info>");
-        return Command::SUCCESS;
+        exec("docker-compose up -d", $out, $code);
+        $output->writeln($out);
+        if ($code === 0) {
+            $output->writeln("<info>Apache Server in http://localhost:8080</info>");
+            $output->writeln("<info>PhpMyAdmin in http://localhost:8081</info>");
+            $output->writeln("<info>MySQL Service in localhost:9906</info>");
+            return Command::SUCCESS;
+        }
+
+        $output->writeln("<error>Error running docker</error>");
+        return Command::FAILURE;
     }
 }
