@@ -49,10 +49,16 @@ class Router implements RouterInterface
     }
 
 
-    public static function enableSessions(): void
+    /**
+     * Enable session function to application
+     * @param bool $delete_old_session [optional] <p>
+     * Whether to delete the old associated session file or not. (on page refresh)
+     * </p>
+     */
+    public static function enableSessions(bool $delete_old_session = false): void
     {
         session_start();
-        session_regenerate_id(false);
+        session_regenerate_id($delete_old_session);
     }
 
     /**
