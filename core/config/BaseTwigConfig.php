@@ -30,16 +30,18 @@ abstract class BaseTwigConfig
             "debug" => $_ENV["DEBUG_MODE"],
         ]);
 
-        if ($_ENV['DEBUG_MODE'])
+        if ($_ENV['DEBUG_MODE']) {
             $this->templateEngine->addExtension(new DebugExtension());
+        }
 
         $this->templateEngine->addGlobal('SERVER', $_SERVER);
         $this->templateEngine->addGlobal('GET', $_GET);
         $this->templateEngine->addGlobal('POST', $_POST);
         $this->templateEngine->addGlobal('COOKIE', $_COOKIE);
         $this->templateEngine->addGlobal('ENV', $_ENV);
-        if (isset($_SESSION))
+        if (isset($_SESSION)) {
             $this->templateEngine->addGlobal('SESSION', $_SESSION);
+        }
 
         $this->templateEngine->addFunction(new TwigFunction('getCss', function (string $cssFile) {
             return sprintf('/css/%s', ltrim($cssFile, '/'));
@@ -73,10 +75,8 @@ abstract class BaseTwigConfig
         // Scan directories in view folder and returned in array
         $scan = scandir($parentDir);
         foreach ($scan as $x) {
-            if (is_dir("$parentDir/$x")) {
-                if ($x !== '.' && $x !== '..') {
-                    $dirs[] = "$parentDir/$x";
-                }
+            if (is_dir("$parentDir/$x") && $x !== '.' && $x !== '..') {
+                $dirs[] = "$parentDir/$x";
             }
         }
         return $dirs;

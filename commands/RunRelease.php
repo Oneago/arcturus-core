@@ -16,7 +16,7 @@ class RunRelease extends Command
 {
     protected static $defaultName = "run:release";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Create released file for production server")
@@ -49,13 +49,14 @@ class RunRelease extends Command
         $this->flush_folder();
 
         $pwd = getcwd();
-        if ($this->isDebugMode())
+        if ($this->isDebugMode()) {
             $output->writeln('<bg=RED;options=bold>Please consider put DEBUG_MODE = 0 in your .env file if this is a production release</>');
+        }
         $output->writeln("<info>Release file in $pwd/$zipDir/$zipName.zip</info>");
         return self::SUCCESS;
     }
 
-    private function recurse_copy(string $src = ".", string $dst = "out")
+    private function recurse_copy(string $src = ".", string $dst = "out"): void
     {
         $dir = opendir($src);
         if (!mkdir($dst) && !is_dir($dst)) {
@@ -64,20 +65,18 @@ class RunRelease extends Command
 
         $excluded = ["Dockerfile", "docker-compose.yml", "composer.lock", "temp", "LICENSE", "ada", ".gitignore", "commands", ".git", "out", "vendor", ".idea", "postinit", ".DS_Store", "Dockerfile", "docker-compose.yml"];
         while (false !== ($file = readdir($dir))) {
-            if (!in_array($file, $excluded, true)) {
-                if (($file !== '.') && ($file !== '..')) {
-                    if (is_dir($src . '/' . $file)) {
-                        $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
-                    } else {
-                        copy($src . '/' . $file, $dst . '/' . $file);
-                    }
+            if (!in_array($file, $excluded, true) && ($file !== '.') && ($file !== '..')) {
+                if (is_dir($src . '/' . $file)) {
+                    $this->recurse_copy($src . '/' . $file, $dst . '/' . $file);
+                } else {
+                    copy($src . '/' . $file, $dst . '/' . $file);
                 }
             }
         }
         closedir($dir);
     }
 
-    private function add_to_zip(ZipArchive $zip)
+    private function add_to_zip(ZipArchive $zip): void
     {
         $src = "out";
 
@@ -98,7 +97,7 @@ class RunRelease extends Command
         }
     }
 
-    private function flush_folder($src = "out")
+    private function flush_folder($src = "out"): void
     {
         if (is_dir($src)) {
             $objects = scandir($src);

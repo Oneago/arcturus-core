@@ -3,26 +3,28 @@
 namespace Oneago\Arcturus\Core\Http;
 
 use Exception;
-use JetBrains\PhpStorm\Pure;
 
 class ViewRequest
 {
+    protected string $view;
+    protected ?string $viewFolder = null;
+    protected ?array $customVars = null;
+    protected string $controllerMethod = 'index';
 
     /**
-     * Router constructor.
      * @param string $view
      * @param string|null $viewFolder
      * @param array|null $customVars
      * @param string $controllerMethod
      */
-    #[Pure] public function __construct(
-        protected string $view,
-        protected ?string $viewFolder = null,
-        protected ?array $customVars = null,
-        protected string $controllerMethod = 'index'
-    )
+    public function __construct(string $view, ?string $viewFolder, ?array $customVars, string $controllerMethod)
     {
+        $this->view = $view;
+        $this->viewFolder = $viewFolder;
+        $this->customVars = $customVars;
+        $this->controllerMethod = $controllerMethod;
     }
+
 
     /**
      * @return string
@@ -51,7 +53,7 @@ class ViewRequest
     /**
      * @return string
      */
-    #[Pure] private function getController(): string
+    private function getController(): string
     {
         $controller = ucfirst($this->view);
         $folder = $this->viewFolder === null ? "" : "\\" . ucfirst($this->viewFolder);

@@ -8,7 +8,10 @@ use PDO;
 
 abstract class Connection
 {
-    protected string $errorDetails;
+    /**
+     * @var string
+     */
+    protected $errorDetails;
 
     /**
      * @return PDO database connection

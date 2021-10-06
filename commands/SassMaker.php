@@ -14,7 +14,7 @@ class SassMaker extends Command
 {
     protected static $defaultName = "sass:new";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Create a sass file or component")
@@ -25,7 +25,7 @@ class SassMaker extends Command
             ->setHelp("This command create a sass file in public_html/css, you can modify folder using --dir -d or --component -c");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dir = $input->getOption("dir");
 

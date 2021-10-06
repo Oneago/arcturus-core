@@ -3,25 +3,26 @@
 namespace Oneago\Arcturus\Core\Http;
 
 use Exception;
-use JetBrains\PhpStorm\Pure;
 
 class ApiRequest
 {
+    protected string $apiFile;
+    protected ?string $apiFolder = null;
+    protected ?array $arrayArgs = null;
+    protected string $apiMethod = 'index';
 
     /**
-     * Router constructor.
      * @param string $apiFile
      * @param string|null $apiFolder
      * @param array|null $arrayArgs
      * @param string $apiMethod
      */
-    #[Pure] public function __construct(
-        protected string $apiFile,
-        protected ?string $apiFolder = null,
-        protected ?array $arrayArgs = null,
-        protected string $apiMethod = 'index'
-    )
+    public function __construct(string $apiFile, ?string $apiFolder, ?array $arrayArgs, string $apiMethod)
     {
+        $this->apiFile = $apiFile;
+        $this->apiFolder = $apiFolder;
+        $this->arrayArgs = $arrayArgs;
+        $this->apiMethod = $apiMethod;
     }
 
     /**
@@ -48,7 +49,7 @@ class ApiRequest
     /**
      * @return string
      */
-    #[Pure] private function getApi(): string
+    private function getApi(): string
     {
         $api = ucfirst($this->apiFile);
         $folder = $this->apiFolder === null ? "" : "\\" . ucfirst($this->apiFolder);

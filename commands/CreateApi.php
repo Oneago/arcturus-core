@@ -14,7 +14,7 @@ class CreateApi extends Command
 {
     protected static $defaultName = "make:api";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Create a new api for this app")
@@ -31,7 +31,7 @@ class CreateApi extends Command
         $output->writeln("<info>Wait a moment please...</info>");
         $output->writeln("");
 
-        $apiName = $this->viewName = ($dir ?? "") . ucfirst($input->getArgument('api name')) . "Api.php";
+        $apiName = ($dir ?? "") . ucfirst($input->getArgument('api name')) . "Api.php";
         $output->writeln("<info>Creating $apiName</info>");
 
         if ($dir !== null) {

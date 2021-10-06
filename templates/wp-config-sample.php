@@ -2,11 +2,12 @@
 
 require_once __DIR__ . "/../appstart.php";
 
+
 $httpHost = $_SERVER['HTTP_HOST'] ?? "URL"; // URL = www.productionURL.com
 
-session_start();
-
 define('WP_CONTENT_DIR', __DIR__ . '/../public_html/wp-content');
+define('UPLOADS', 'wp-content/uploads');
+define('WP_CONTENT_URL', (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https://' : 'http://') . $httpHost . '/wp-content');
 
 /**
  * The base configuration for WordPress

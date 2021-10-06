@@ -11,14 +11,14 @@ class DockerKill extends Command
 {
     protected static $defaultName = "docker:kill";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Kill docker-compose.yml")
             ->setHelp("This command kill a docker-compose.yml containers");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Killing docker-compose.yml</info>");
         $output->writeln("");

@@ -12,7 +12,7 @@ class SassCompiler extends Command
 {
     protected static $defaultName = "sass:compile";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Compile a sass file")
@@ -20,7 +20,7 @@ class SassCompiler extends Command
             ->setHelp("This command compile a sass file in public_html/css");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = $input->getArgument('name');
         $name .= str_contains($name, ".scss") ? "" : ".scss";

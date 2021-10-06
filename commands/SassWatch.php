@@ -12,7 +12,7 @@ class SassWatch extends Command
 {
     protected static $defaultName = "sass:watch";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("auto compile a sass file on change")
@@ -20,7 +20,7 @@ class SassWatch extends Command
             ->setHelp("This command autocompile a sass file in public_html/css");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $name = $input->getArgument('name');
         $name .= str_contains($name, ".scss") ? "" : ".scss";

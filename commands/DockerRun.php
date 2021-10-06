@@ -11,14 +11,14 @@ class DockerRun extends Command
 {
     protected static $defaultName = "docker:run";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Run docker-compose.yml")
             ->setHelp("This command runs a docker-compose.yml file and up containers");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Running docker-compose.yml</info>");
         $output->writeln("");

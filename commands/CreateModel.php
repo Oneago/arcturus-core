@@ -12,7 +12,7 @@ class CreateModel extends Command
 {
     protected static $defaultName = "make:model";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Create a new model for this app")
@@ -20,25 +20,25 @@ class CreateModel extends Command
             ->setHelp("This command create a new model passing a name");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Creating {$input->getArgument('model name')}</info>");
         $output->writeln("<info>Wait a moment please...</info>");
         $output->writeln("");
 
         $modelName = ucfirst($input->getArgument('model name')) . "Model.php";
-        $output->writeln("<info>Creating {$modelName}</info>");
-        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php", "app/Models");
-        $output->writeln("<info>{$modelName} Created!</info>");
+        $output->writeln("<info>Creating $modelName</info>");
+        $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php");
+        $output->writeln("<info>$modelName Created!</info>");
         $output->writeln("");
 
         $output->writeln("<info>{$input->getArgument('model name')} model has created!</info>");
         return Command::SUCCESS;
     }
 
-    private function createFile(string $name, string $templatePath, string $savePath)
+    private function createFile(string $name, string $templatePath): void
     {
-        $fp = fopen("$savePath/$name", 'wb+');
+        $fp = fopen("app/Models/$name", 'wb+');
 
         $fileContent = file_get_contents($templatePath);
 
@@ -52,6 +52,6 @@ class CreateModel extends Command
         );
         fwrite($fp, $contents);
         fclose($fp);
-        exec("git add $savePath/$name");
+        exec("git add app/Models/$name");
     }
 }

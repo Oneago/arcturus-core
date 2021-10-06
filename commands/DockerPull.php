@@ -11,14 +11,14 @@ class DockerPull extends Command
 {
     protected static $defaultName = "docker:pull";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Pull docker-compose.yml containers")
             ->setHelp("This command pull docker-compose.yml containers from docker hub");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Pulling docker-compose.yml</info>");
         $output->writeln("");

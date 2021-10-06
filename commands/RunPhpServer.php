@@ -12,7 +12,7 @@ class RunPhpServer extends Command
 {
     protected static $defaultName = "run:server";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Run server with php")
@@ -20,7 +20,7 @@ class RunPhpServer extends Command
             ->setHelp("This command runs a php server");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Running in http://{$input->getArgument('address')}</info>");
         $output->writeln(shell_exec("cd public_html && php -S {$input->getArgument('address')}"));

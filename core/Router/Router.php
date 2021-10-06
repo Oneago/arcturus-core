@@ -5,7 +5,6 @@ namespace Oneago\Arcturus\Core\Router;
 
 
 use Exception;
-use JetBrains\PhpStorm\Pure;
 use Oneago\Arcturus\Core\Http\ApiRequest;
 use Oneago\Arcturus\Core\Http\ViewRequest;
 use Oneago\Arcturus\Core\Router\Interfaces\MiddlewareInterface;
@@ -27,7 +26,7 @@ class Router implements RouterInterface
     /**
      * Router constructor.
      */
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->request = new Request();
     }
@@ -121,7 +120,7 @@ class Router implements RouterInterface
             if (in_array($this->request->getMethod(), $methods, true)) {
                 $args = $this->exportVars($pattern);
                 if ($this->checkMiddlewares(...$middlewares)) {
-                    $return = $callable(request: $this->request, args: $args);
+                    $return = $callable($this->request, $args);
                     if (!$return instanceof ViewRequest && !$return instanceof ApiRequest && !is_string($return)) {
                         throw new Exception("Callable return isn't a ViewRequest, ApiRequest instance or string");
                     } else if ($return instanceof ViewRequest) {
@@ -133,7 +132,7 @@ class Router implements RouterInterface
                     }
                 } else if ($this->middlewareFailMode === self::MIDDLEWARE_REDIRECT_ON_FAIL) {
                     http_response_code(401);
-                    header("Location: {$this->middlewareFailAction}");
+                    header("Location: $this->middlewareFailAction");
                 } else if ($this->middlewareFailMode === self::MIDDLEWARE_MESSAGE_ON_FAIL) {
                     http_response_code(401);
                     echo $this->middlewareFailAction;
@@ -157,8 +156,8 @@ class Router implements RouterInterface
     {
         $pathRequest = $this->request->getPathRequest();
         $pathRequest = str_contains($pathRequest, "?") ? substr($pathRequest, 0, strpos($pathRequest, "?")) : $pathRequest;
-        $requestObject = array_filter((explode('/', $pathRequest)), fn($x) => !is_null($x) && $x !== '');
-        $pathPattern = array_filter((explode('/', $pathPattern)), fn($x) => !is_null($x) && $x !== '');
+        $requestObject = array_filter((explode('/', $pathRequest)), static fn($x) => !is_null($x) && $x !== '');
+        $pathPattern = array_filter((explode('/', $pathPattern)), static fn($x) => !is_null($x) && $x !== '');
 
         if (count($requestObject) === 0 && 0 === count($pathPattern)) {
             return true;
@@ -221,10 +220,11 @@ class Router implements RouterInterface
 
     /**
      * @param callable $view Return vie
+     * @noinspection PhpDocMissingThrowsInspection
      */
     public function setCustom404Page(callable $view): void
     {
-        $return = $view(request: $this->request);
+        $return = $view($this->request);
         if (!$return instanceof ViewRequest) {
             echo "Callable return isn't a ViewRequest instance";
         }

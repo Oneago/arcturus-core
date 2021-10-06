@@ -11,14 +11,14 @@ class TypeScriptCompile extends Command
 {
     protected static $defaultName = "tsc:compile";
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Compile TypeScript")
             ->setHelp("This command compile typescript folder in public_html/js");
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Compiling typescript folder</info>");
         $output->writeln(shell_exec("node_modules/.bin/tsc ./public_html/js/*.ts && git add ./public_html/js"));

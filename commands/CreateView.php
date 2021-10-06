@@ -15,7 +15,7 @@ class CreateView extends Command
     protected static $defaultName = "make:view";
     private string $viewName;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription("Create a new view for this app")
@@ -34,21 +34,21 @@ class CreateView extends Command
         $output->writeln("");
 
         $viewName = $this->viewName = ucfirst($dir ?? "") . ucfirst($input->getArgument('view name')) . ".twig";
-        $output->writeln("<info>Creating {$viewName}</info>");
+        $output->writeln("<info>Creating $viewName</info>");
         $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "views", $dir);
-        $output->writeln("<info>{$viewName} Created!</info>");
+        $output->writeln("<info>$viewName Created!</info>");
         $output->writeln("");
 
         if (!$input->getOption('no-controller')) {
             $controllerName = ucfirst($dir ?? "") . ucfirst($input->getArgument('view name')) . "Controller.php";
-            $output->writeln("<info>Creating {$controllerName}</info>");
+            $output->writeln("<info>Creating $controllerName</info>");
             if ($dir !== null) {
                 $cDir = ucfirst($dir);
                 $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", $cDir);
             } else {
                 $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", null);
             }
-            $output->writeln("<info>{$controllerName} Created!</info>");
+            $output->writeln("<info>$controllerName Created!</info>");
             $output->writeln("");
         }
 

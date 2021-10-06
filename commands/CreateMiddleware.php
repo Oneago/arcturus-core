@@ -32,9 +32,9 @@ class CreateMiddleware extends Command
         $output->writeln("");
 
         $middlewareName = ucfirst($input->getArgument('middleware name')) . "Middleware.php";
-        $output->writeln("<info>Creating {$middlewareName}</info>");
-        $this->createFile($middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php", "app/Http/Middlewares");
-        $output->writeln("<info>{$middlewareName} Created!</info>");
+        $output->writeln("<info>Creating $middlewareName</info>");
+        $this->createFile($middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php");
+        $output->writeln("<info>$middlewareName Created!</info>");
         $output->writeln("");
 
         $output->writeln("<info>{$input->getArgument('middleware name')} middleware has created!</info>");
@@ -44,11 +44,10 @@ class CreateMiddleware extends Command
     /**
      * @param string $name
      * @param string $templatePath
-     * @param string $savePath
      */
-    private function createFile(string $name, string $templatePath, string $savePath): void
+    private function createFile(string $name, string $templatePath): void
     {
-        $fp = fopen("$savePath/$name", 'wb+');
+        $fp = fopen("app/Http/Middlewares/$name", 'wb+');
 
         $fileContent = file_get_contents($templatePath);
 
@@ -62,6 +61,6 @@ class CreateMiddleware extends Command
         );
         fwrite($fp, $contents);
         fclose($fp);
-        exec("git add $savePath/$name");
+        exec("git add app/Http/Middlewares/$name");
     }
 }
