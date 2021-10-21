@@ -77,6 +77,12 @@ abstract class BaseTwigConfig
         foreach ($scan as $x) {
             if (is_dir("$parentDir/$x") && $x !== '.' && $x !== '..') {
                 $dirs[] = "$parentDir/$x";
+                $scanSubFolder = scandir("$parentDir/$x");
+                foreach ($scanSubFolder as $y) {
+                    if (is_dir("$parentDir/$x/$y") && $y !== '.' && $y !== '..') {
+                        $dirs[] = "$parentDir/$x/$y";
+                    }
+                }
             }
         }
         return $dirs;
