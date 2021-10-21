@@ -14,8 +14,9 @@ if (!function_exists('template')) {
 if (!function_exists('view')) {
     function view(string $view, string $viewFolder = null, array $customVars = null, string $controllerMethod = 'index'): ViewRequest
     {
-        $twigFolder = strtolower($viewFolder === null ? "$viewFolder/" : '');
-        return new ViewRequest("$twigFolder$view", $viewFolder, $customVars, $controllerMethod);
+        $twigFolder = strtolower($viewFolder !== null ? "$viewFolder/" : ''); // all path to lower
+        $view = ucfirst($view); // first capitalized for file formats
+        return new ViewRequest("$twigFolder$view", $customVars, $controllerMethod);
     }
 }
 

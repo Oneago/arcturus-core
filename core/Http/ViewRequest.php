@@ -7,7 +7,6 @@ use Exception;
 class ViewRequest
 {
     protected string $view;
-    protected ?string $viewFolder = null;
     protected ?array $customVars = null;
     protected string $controllerMethod = 'index';
 
@@ -17,10 +16,9 @@ class ViewRequest
      * @param array|null $customVars
      * @param string $controllerMethod
      */
-    public function __construct(string $view, ?string $viewFolder, ?array $customVars, string $controllerMethod)
+    public function __construct(string $view, ?array $customVars, string $controllerMethod)
     {
         $this->view = $view;
-        $this->viewFolder = $viewFolder;
         $this->customVars = $customVars;
         $this->controllerMethod = $controllerMethod;
     }
@@ -56,8 +54,7 @@ class ViewRequest
     private function getController(): string
     {
         $controller = ucfirst($this->view);
-        $folder = $this->viewFolder ?? ""; // Set controller namespace without namespace format
-        $folder = implode("\\", array_map("ucfirst", explode("/", $folder))); // ucfirst on all path
-        return "App\Http\Controllers$folder\\{$controller}Controller";
+        $controller = implode("\\", array_map("ucfirst", explode("/", $controller))); // ucfirst on all path
+        return "App\Http\Controllers\\{$controller}Controller";
     }
 }

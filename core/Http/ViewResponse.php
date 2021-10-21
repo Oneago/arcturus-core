@@ -4,6 +4,9 @@ namespace Oneago\Arcturus\Core\Http;
 
 use App\Config\TwigConfig;
 
+/**
+ * @method renderHTML(string $string, array $twigVariables)
+ */
 class ViewResponse extends TwigConfig
 {
     protected string $twigView;
@@ -23,8 +26,6 @@ class ViewResponse extends TwigConfig
 
     public function render(): string
     {
-        $view = ucfirst($this->twigView);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        return $this->renderHTML("$view.twig", $this->twigVariables);
+        return $this->renderHTML("$this->twigView.twig", $this->twigVariables);
     }
 }
