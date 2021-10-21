@@ -21,7 +21,7 @@ class TypeScriptCompile extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("Compiling typescript folder");
-        $output->writeln(shell_exec("node_modules/.bin/tsc ./public_html/js/*.ts && git add ./public_html/js"));
+        $output->writeln(shell_exec("node_modules/.bin/tsc ./app/typescript/*.ts"));
         $output->writeln("<info>Compile success</info>");
         return Command::SUCCESS;
     }
