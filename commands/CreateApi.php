@@ -27,12 +27,12 @@ class CreateApi extends Command
     {
         $dir = ucfirst($input->getOption("dir"));
 
-        $output->writeln("<info>Creating {$input->getArgument('api name')}</info>");
-        $output->writeln("<info>Wait a moment please...</info>");
+        $output->writeln("Creating {$input->getArgument('api name')}");
+        $output->writeln("Wait a moment please...");
         $output->writeln("");
 
         $apiName = ($dir ?? "") . ucfirst($input->getArgument('api name')) . "Api.php";
-        $output->writeln("<info>Creating $apiName</info>");
+        $output->writeln("Creating $apiName");
 
         if ($dir !== null) {
             $this->createFile($apiName, __DIR__ . "/../templates/ExampleApi.php", $dir);

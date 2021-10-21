@@ -22,12 +22,12 @@ class CreateModel extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("<info>Creating {$input->getArgument('model name')}</info>");
-        $output->writeln("<info>Wait a moment please...</info>");
+        $output->writeln("Creating {$input->getArgument('model name')}");
+        $output->writeln("Wait a moment please...");
         $output->writeln("");
 
         $modelName = ucfirst($input->getArgument('model name')) . "Model.php";
-        $output->writeln("<info>Creating $modelName</info>");
+        $output->writeln("Creating $modelName");
         $this->createFile($modelName, __DIR__ . "/../templates/ExampleModel.php");
         $output->writeln("<info>$modelName Created!</info>");
         $output->writeln("");

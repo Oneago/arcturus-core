@@ -27,12 +27,12 @@ class CreateMiddleware extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("<info>Creating {$input->getArgument('middleware name')}</info>");
-        $output->writeln("<info>Wait a moment please...</info>");
+        $output->writeln("Creating {$input->getArgument('middleware name')}");
+        $output->writeln("Wait a moment please...");
         $output->writeln("");
 
         $middlewareName = ucfirst($input->getArgument('middleware name')) . "Middleware.php";
-        $output->writeln("<info>Creating $middlewareName</info>");
+        $output->writeln("Creating $middlewareName");
         $this->createFile($middlewareName, __DIR__ . "/../templates/ExampleMiddleware.php");
         $output->writeln("<info>$middlewareName Created!</info>");
         $output->writeln("");

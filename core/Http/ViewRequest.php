@@ -56,7 +56,8 @@ class ViewRequest
     private function getController(): string
     {
         $controller = ucfirst($this->view);
-        $folder = $this->viewFolder === null ? "" : "\\" . ucfirst($this->viewFolder);
+        $folder = $this->viewFolder ?? ""; // Set controller namespace without namespace format
+        $folder = implode("\\", array_map("ucfirst", explode("/", $folder))); // ucfirst on all path
         return "App\Http\Controllers$folder\\{$controller}Controller";
     }
 }

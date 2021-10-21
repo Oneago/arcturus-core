@@ -70,22 +70,7 @@ abstract class BaseTwigConfig
     private function getViewsDirs(): array
     {
         $parentDir = __DIR__ . "/../../../../../views";
-        $dirs = [$parentDir];
-
-        // Scan directories in view folder and returned in array
-        $scan = scandir($parentDir);
-        foreach ($scan as $x) {
-            if (is_dir("$parentDir/$x") && $x !== '.' && $x !== '..') {
-                $dirs[] = "$parentDir/$x";
-                $scanSubFolder = scandir("$parentDir/$x");
-                foreach ($scanSubFolder as $y) {
-                    if (is_dir("$parentDir/$x/$y") && $y !== '.' && $y !== '..') {
-                        $dirs[] = "$parentDir/$x/$y";
-                    }
-                }
-            }
-        }
-        return $dirs;
+        return [$parentDir];
     }
 
     /**

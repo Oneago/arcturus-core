@@ -11,11 +11,16 @@ class GeneralFunctions
     /**
      * @param string $name
      * @param OutputInterface $output
+     * @param bool $showHour
      */
-    public static function makeFolder(string $name, OutputInterface $output): void
+    public static function makeFolder(string $name, OutputInterface $output, bool $showHour = true): void
     {
         if (!file_exists($name)) {
-            $output->writeln(sprintf("[%s] Creating $name folder...", self::getHour()));
+            if ($showHour) {
+                $output->writeln(sprintf("[%s] Creating $name folder...", self::getHour()));
+            } else {
+                $output->writeln("Creating $name folder...");
+            }
             if (!mkdir($name) && !is_dir($name)) {
                 throw new RuntimeException(sprintf('Directory "%s" was not created', $name));
             }
