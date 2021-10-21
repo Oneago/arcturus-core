@@ -69,7 +69,7 @@ abstract class BaseTwigConfig
      */
     private function getViewsDirs(): array
     {
-        $parentDir = __DIR__ . "/../../../../../views";
+        $parentDir = __DIR__ . "/../../../../../app/views";
         return [$parentDir];
     }
 

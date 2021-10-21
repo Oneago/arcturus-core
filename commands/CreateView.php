@@ -36,16 +36,16 @@ class CreateView extends Command
         $output->writeln("");
 
         // Create twig file based on template
-        $viewName = $this->viewName = $dirFileNamePrefix . ucfirst($input->getArgument('view name')) . ".twig";
+        $viewName = $this->viewName = ucfirst($input->getArgument('view name')) . ".twig";
         $output->writeln("Creating $viewName");
         $vDir = strtolower($dir); // strtolower all dir path vDir = viewDir abbreviation
-        $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "views", $vDir, $output);
+        $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "app/views", $vDir, $output);
         $output->writeln("<info>$viewName Created!</info>");
         $output->writeln("");
 
         if (!$input->getOption('no-controller')) { // bool, if is true not create controller
             // Create controller PHP file
-            $controllerName = $dirFileNamePrefix . ucfirst($input->getArgument('view name')) . "Controller.php";
+            $controllerName = ucfirst($input->getArgument('view name')) . "Controller.php";
             $output->writeln("Creating $controllerName");
             if ($dir !== null) { // if need create dir
                 $cDir = implode("/", array_map("ucfirst", explode("/", $dir))); // ucfirst on all folders controller cDir = controllerDir abbreviation
