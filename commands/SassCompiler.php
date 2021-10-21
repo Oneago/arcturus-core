@@ -16,23 +16,41 @@ class SassCompiler extends Command
     {
         $this
             ->setDescription("Compile a sass file")
-            ->addArgument("name", InputArgument::REQUIRED, "Name for sass file")
-            ->setHelp("This command compile a sass file in public_html/css");
+            ->setHelp("This command compile a sass file in to public_html/css");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $name = $input->getArgument('name');
-        $name .= str_contains($name, ".scss") ? "" : ".scss";
+        $parentDir = "app/sass/";
 
-        $output->writeln("<info>Compiling sass file in public_html/css/$name</info>");
+        $output->writeln("Compiling sass file in to public_html/css");
+        $output->writeln("");
 
-        if (!is_file("public_html/css/$name")) {
-            $output->writeln("<error>$name not is a valid file</error>");
-            return self::FAILURE;
+        $scan = scandir($parentDir);
+        foreach ($scan as $file) {
+            if (!is_dir("$parentDir/$file") && $file !== "." && $file !== "..") {
+                $sassMIMECheck = substr($file, -5) === ".scss";
+                $isSassComponent = $file[0] === "_";
+                if ($sassMIMECheck && !$isSassComponent) {
+                    GeneralFunctions::makeFolder("public_html/css", $output, false);
+                    $output->writeln("Compiling $file");
+
+                    $cssName = str_replace('.scss', '.css', $file);
+                    exec("node_modules/.bin/sass --style=compressed app/sass/$file public_html/css/$cssName", $out, $code);
+                    $output->writeln($out);
+
+                    if ($code === 0) {
+                        $output->writeln("<info>$file compile succcessful on public/css/$cssName</info>");
+                        $output->writeln("");
+                    } else {
+                        $output->writeln("<error>Error compiling $file</error>");
+                        return Command::FAILURE;
+                    }
+                }
+            }
         }
-        $cssName = str_replace('.scss', '.css', $name);
-        exec("sass --style=compressed public_html/css/$name public_html/css/$cssName");
+
+        $output->writeln("<info>Sass compile finish successful</info>");
         return self::SUCCESS;
     }
 }

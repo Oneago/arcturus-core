@@ -34,11 +34,8 @@ class SassMaker extends Command
         $parent = $input->getOption("parent");
         $parent .= str_contains($parent, ".scss") ? "" : ".scss";
 
-        if (!mkdir("public_html") && !is_dir("public_html")) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', "public_html"));
-        }
-        if (!mkdir("public_html/css") && !is_dir("public_html/css")) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', "public_html/css"));
+        if (!file_exists("app/sass") && !mkdir("app/sass") && !is_dir("app/sass")) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', "app/sass"));
         }
         if ($input->getOption("component")) {
             $this->createSass($output, "_$name", "components", $parent);
@@ -61,17 +58,17 @@ class SassMaker extends Command
      */
     private function createSass(OutputInterface $output, string $name, string $folder = null, string $parent = null): void
     {
-        $path = "public_html/css";
+        $path = "app/sass"; // $path change if $folder is set
         $userName = get_current_user();
         $date = date("d/m/Y H:i:s");
 
         if ($folder !== null) {
-            if (!mkdir("public_html/css/$folder") && !is_dir("public_html/css/$folder")) {
-                throw new RuntimeException(sprintf('Directory "%s" was not created', "public_html/css/$folder"));
+            if (!file_exists("app/sass/$folder") && !mkdir("app/sass/$folder") && !is_dir("app/sass/$folder")) {
+                throw new RuntimeException(sprintf('Directory "%s" was not created', "app/sass/$folder"));
             }
             $path .= "/$folder";
         }
-        $output->writeln("<info>Creating in $path/$name</info>");
+        $output->writeln("Creating $path/$name");
         $fp = fopen("$path/$name", 'wb+');
         fwrite($fp, "/*" . PHP_EOL);
         fwrite($fp, " * $name" . PHP_EOL);
@@ -84,7 +81,7 @@ class SassMaker extends Command
         // Add to parent
         if ($folder !== null) {
             $name = str_replace("_", "", $name);
-            $fp = fopen("public_html/css/$parent", 'ab+');
+            $fp = fopen("app/sass/$parent", 'ab+');
             fwrite($fp, PHP_EOL . "@import \"$folder/$name\";");
             fclose($fp);
         }

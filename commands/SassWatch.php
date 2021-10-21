@@ -17,7 +17,7 @@ class SassWatch extends Command
         $this
             ->setDescription("auto compile a sass file on change")
             ->addArgument("name", InputArgument::REQUIRED, "Name for sass file")
-            ->setHelp("This command autocompile a sass file in public_html/css");
+            ->setHelp("This command autocompile a sass file in app/sass");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -25,14 +25,14 @@ class SassWatch extends Command
         $name = $input->getArgument('name');
         $name .= str_contains($name, ".scss") ? "" : ".scss";
 
-        $output->writeln("<info>Watching sass file in public_html/css/$name</info>");
+        $output->writeln("Watching sass file in app/sass/$name");
 
-        if (!is_file("public_html/css/$name")) {
+        if (!is_file("app/sass/$name")) {
             $output->writeln("<error>$name not is a valid file</error>");
             return self::FAILURE;
         }
         $cssName = str_replace('.scss', '.css', $name);
-        exec("sass --style=compressed --watch public_html/css/$name public_html/css/$cssName &");
+        exec("node_modules/.bin/sass --style=compressed --watch app/sass/$name public_html/css/$cssName &");
         return self::SUCCESS;
     }
 }
