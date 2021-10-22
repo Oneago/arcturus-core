@@ -3,6 +3,7 @@
 
 namespace Oneago\Arcturus\Commands;
 
+use Exception;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,8 +29,6 @@ class CreateView extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dir = $input->getOption("dir");
-        $allDirs = explode("/", $dir);
-        $dirFileNamePrefix = implode(array_map("ucfirst", $allDirs)); // First capitalized on dir path
 
         $output->writeln("Creating {$input->getArgument('view name')}");
         $output->writeln("Wait a moment please...");
@@ -39,7 +38,10 @@ class CreateView extends Command
         $viewName = $this->viewName = ucfirst($input->getArgument('view name')) . ".twig";
         $output->writeln("Creating $viewName");
         $vDir = strtolower($dir); // strtolower all dir path vDir = viewDir abbreviation
-        $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "app/views", $vDir, $output);
+        $creationState = $this->createFile($viewName, __DIR__ . "/../templates/example.twig", "app/views", $vDir, $output);
+        if ($creationState !== Command::SUCCESS) { // If not success, finish task
+            return $creationState;
+        }
         $output->writeln("<info>$viewName Created!</info>");
         $output->writeln("");
 
@@ -49,9 +51,12 @@ class CreateView extends Command
             $output->writeln("Creating $controllerName");
             if ($dir !== null) { // if need create dir
                 $cDir = implode("/", array_map("ucfirst", explode("/", $dir))); // ucfirst on all folders controller cDir = controllerDir abbreviation
-                $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", $cDir, $output);
+                $creationState = $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", $cDir, $output);
             } else {
-                $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", null, $output);
+                $creationState = $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", null, $output);
+            }
+            if ($creationState !== Command::SUCCESS) { // If not success, finish task
+                return $creationState;
             }
             $output->writeln("<info>$controllerName Created!</info>");
             $output->writeln("");
@@ -67,13 +72,20 @@ class CreateView extends Command
      * @param string $savePath
      * @param string|null $newDirectory
      * @param OutputInterface $output
+     * @return int
      */
-    private function createFile(string $name, string $templatePath, string $savePath, ?string $newDirectory, OutputInterface $output): void
+    private function createFile(string $name, string $templatePath, string $savePath, ?string $newDirectory, OutputInterface $output): int
     {
-        $controllerNamespace = str_replace("/", "\\", $savePath);
+        $controllerNamespace = str_replace("/", "\\", $newDirectory);
         if ($newDirectory !== null) {
             $savePath = "$savePath/$newDirectory";
-            GeneralFunctions::makeFolder($savePath, $output, false);
+            try {
+                GeneralFunctions::makeFolder($savePath, $output, false);
+            } catch (Exception $e) {
+                $output->writeln("<error>Parent folder should exist first</error>");
+                $output->writeln("<error>{$e->getMessage()}</error>");
+                return Command::INVALID;
+            }
         }
         $fp = fopen("$savePath/$name", 'wb+');
 
@@ -96,5 +108,6 @@ class CreateView extends Command
         fwrite($fp, $contents);
         fclose($fp);
         exec("git add $savePath/$name");
+        return Command::SUCCESS;
     }
 }

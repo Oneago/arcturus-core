@@ -15,15 +15,15 @@ class SassCompiler extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription("Compile a sass file")
-            ->setHelp("This command compile a sass file in to public_html/css");
+            ->setDescription("Compile all sass files")
+            ->setHelp("This command compile all sass files in to app/sass");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $parentDir = "app/sass/";
 
-        $output->writeln("Compiling sass file in to public_html/css");
+        $output->writeln("Compiling sass files in to public_html/css");
         $output->writeln("");
 
         $scan = scandir($parentDir);
