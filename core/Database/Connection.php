@@ -11,18 +11,16 @@ abstract class Connection
     protected string $errorDetails;
 
     /**
-     * @param array $PDOOptions
+     * @param array|null $PDOOptions
      * @return PDO
      */
-    protected static function init(array $PDOOptions = []): PDO
+    protected static function init(array $PDOOptions = null): PDO
     {
-        $options = [
-            PDO::ATTR_EMULATE_PREPARES => false, // turn off emulation mode for "real" prepared statements
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
-        ];
-
-        $options = array_merge($options, $PDOOptions);
+        $options = $PDOOptions ?? [
+                PDO::ATTR_EMULATE_PREPARES => false, // turn off emulation mode for "real" prepared statements
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
+            ];
 
         try {
             return new PDO("mysql:host={$_ENV["DB_HOST"]};port={$_ENV["DB_PORT"]};dbname={$_ENV["DB_NAME"]};charset=utf8", $_ENV["DB_USER"], $_ENV["DB_PASS"], $options);
