@@ -36,7 +36,7 @@ class SassCompiler extends Command
                     $output->writeln("Compiling $file");
 
                     $cssName = str_replace('.scss', '.css', $file);
-                    exec("node_modules/.bin/sass --style=compressed app/sass/$file public_html/css/$cssName", $out, $code);
+                    exec("npm bin sass --style=compressed app/sass/$file public_html/css/$cssName", $out, $code);
                     $output->writeln($out);
 
                     if ($code === 0) {
