@@ -4,7 +4,6 @@
 namespace Oneago\Arcturus\Commands;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -36,7 +35,7 @@ class SassCompiler extends Command
                     $output->writeln("Compiling $file");
 
                     $cssName = str_replace('.scss', '.css', $file);
-                    exec("npm exec sass --style=compressed app/sass/$file public_html/css/$cssName", $out, $code);
+                    exec("npx sass --style=compressed app/sass/$file public_html/css/$cssName", $out, $code);
                     $output->writeln($out);
 
                     if ($code === 0) {

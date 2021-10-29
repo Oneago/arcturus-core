@@ -32,7 +32,7 @@ class SassWatch extends Command
             return self::FAILURE;
         }
         $cssName = str_replace('.scss', '.css', $name);
-        exec("npm exec sass --style=compressed --watch app/sass/$name public_html/css/$cssName &");
+        exec("npx sass --style=compressed --watch app/sass/$name public_html/css/$cssName &");
         return self::SUCCESS;
     }
 }
