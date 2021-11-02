@@ -61,7 +61,7 @@ class InstallWP extends Command
         $output->writeln('');
 
         $locale = $input->getOption("locale");
-        $wp = "$pharDir/wp-cli.phar";
+        $wp = "php $pharDir/wp-cli.phar";
         $cmd = "$wp core download --path=$installationDir --locale=$locale";
 
 
