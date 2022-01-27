@@ -73,7 +73,7 @@ define('NONCE_SALT', '');
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix = "{$_ENV['APP_NAME']}wpB_";
+$table_prefix = str_replace(" ", "_", $_ENV['APP_NAME']) . "wpB_";
 
 /**
  * For developers: WordPress debugging mode.
