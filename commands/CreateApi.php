@@ -6,8 +6,8 @@ namespace Oneago\Arcturus\Commands;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateApi extends Command
@@ -25,17 +25,17 @@ class CreateApi extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $dir = ucfirst($input->getOption("dir"));
+        $dir = $input->getOption("dir");
 
         $output->writeln("Creating {$input->getArgument('api name')}");
         $output->writeln("Wait a moment please...");
         $output->writeln("");
 
-        $apiName = ($dir ?? "") . ucfirst($input->getArgument('api name')) . "Api.php";
+        $apiName = ucfirst($input->getArgument('api name')) . "Api.php";
         $output->writeln("Creating $apiName");
 
         if ($dir !== null) {
-            $this->createFile($apiName, __DIR__ . "/../templates/ExampleApi.php", $dir);
+            $this->createFile($apiName, __DIR__ . "/../templates/ExampleApi.php", ucfirst(strtolower($dir)));
         } else {
             $this->createFile($apiName, __DIR__ . "/../templates/ExampleApi.php", null);
         }
@@ -57,7 +57,7 @@ class CreateApi extends Command
     {
         $savePath = "app/Http/Apis";
         if ($newDirectory !== null) {
-            if (!mkdir("$savePath/$newDirectory") && !is_dir("$savePath/$newDirectory")) {
+            if (!file_exists("$savePath/$newDirectory") && !mkdir("$savePath/$newDirectory") && !is_dir("$savePath/$newDirectory")) {
                 throw new RuntimeException(sprintf('Directory "%s" was not created', "$savePath/$newDirectory"));
             }
             $savePath = "$savePath/$newDirectory";
@@ -74,7 +74,7 @@ class CreateApi extends Command
             ],
             [
                 str_replace(".php", "", $name),
-                "App\Http\Apis" . ($newDirectory !== null ? "\\$newDirectory" : ''),
+                "App\Http\Apis" . ($newDirectory !== null ? "\\" . str_replace('/', '\\', $newDirectory) : ''),
                 ""
             ], $fileContent
         );

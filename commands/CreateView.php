@@ -50,7 +50,7 @@ class CreateView extends Command
             $controllerName = ucfirst($input->getArgument('view name')) . "Controller.php";
             $output->writeln("Creating $controllerName");
             if ($dir !== null) { // if need create dir
-                $cDir = implode("/", array_map("ucfirst", explode("/", $dir))); // ucfirst on all folders controller cDir = controllerDir abbreviation
+                $cDir = implode("/", array_map("ucwords", explode("/", $vDir))); // ucwords on all folders controller cDir = controllerDir abbreviation
                 $creationState = $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", $cDir, $output);
             } else {
                 $creationState = $this->createFile($controllerName, __DIR__ . "/../templates/ExampleController.php", "app/Http/Controllers", null, $output);
@@ -77,6 +77,8 @@ class CreateView extends Command
     private function createFile(string $name, string $templatePath, string $savePath, ?string $newDirectory, OutputInterface $output): int
     {
         $controllerNamespace = str_replace("/", "\\", $newDirectory);
+        $controllerNamespace = rtrim($controllerNamespace, '\\'); // Remove '\' if is last character
+
         if ($newDirectory !== null) {
             $savePath = "$savePath/$newDirectory";
             try {
