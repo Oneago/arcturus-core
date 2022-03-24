@@ -21,7 +21,7 @@ class Request
         $this->root = $_SERVER['HTTP_HOST'];
         $this->port = $_SERVER['SERVER_PORT'];
         $this->method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-        $this->pathRequest = $_SERVER['REQUEST_URI'];
+        $this->pathRequest = urldecode($_SERVER['REQUEST_URI']);
     }
 
     /**
