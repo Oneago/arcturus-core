@@ -197,7 +197,7 @@ class Router implements RouterInterface
             if (count($match) > 0) {
                 $varName = str_replace(['{', '}'], ['', ''], $match)[0];
                 $$varName = $requestObject[$i] ?? null;
-                $args[$varName] = urldecode($requestObject[$i] ?? null);
+                $args[$varName] = isset($requestObject[$i]) ? urldecode($requestObject[$i]) : null;
             }
         }
         return $args;
