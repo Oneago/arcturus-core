@@ -1,3 +1,3 @@
-# arcturus-core [Read-Only]
+# arcturus-core [Only for [Arcturus Project](https://github.com/Oneago/arcturus-project)]
 
-This is commands for [Arcturus Project](https://github.com/Oneago/arcturus-project)
+`ada` commands and base core for [Arcturus Project](https://github.com/Oneago/arcturus-project)

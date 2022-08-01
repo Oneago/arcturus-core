@@ -7,8 +7,8 @@
     "php": ">=7.4",
     "ext-zip": "*",
     "ext-pdo": "*",
-    "symfony/console": "^5.2",
-    "twig/twig": "^3.3"
+    "symfony/console": "^v6.1",
+    "twig/twig": "^3.4"
   },
   "authors": [
     {
