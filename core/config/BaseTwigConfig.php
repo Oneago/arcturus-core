@@ -62,6 +62,9 @@ abstract class BaseTwigConfig
             $diff = $start->diff($finish);
             return $diff->invert ? $diff->days * -1 : $diff->days;
         }));
+        $this->templateEngine->addFunction(new TwigFunction("static_call", function (string $class, string $method, array $params = []) {
+            return call_user_func_array([$class, $method], $params);
+        }));
     }
 
     /**
